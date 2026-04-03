@@ -31,9 +31,13 @@ function parseNumberBodyField(value: unknown, fallback: number): number {
     return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-router.get('/settings', authenticate, (req: Request, res: Response) => {
+router.get('/settings', authenticate, async (req: Request, res: Response) => {
     const authReq = req as AuthRequest;
-    res.json(getSynologySettings(authReq.user.id));
+    try {
+        res.json(await getSynologySettings(authReq.user.id));
+    } catch (err: unknown) {
+        handleSynologyError(res, err, 'Failed to load settings');
+    }
 });
 
 router.put('/settings', authenticate, async (req: Request, res: Response) => {
