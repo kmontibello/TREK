@@ -92,6 +92,12 @@ describe('Create trip', () => {
   it('TRIP-002 — POST /api/trips without dates returns 201 and defaults to a 7-day window', async () => {
     const { user } = createUser(testDb);
 
+    const addDays = (d: Date, n: number) => { const r = new Date(d); r.setDate(r.getDate() + n); return r; };
+    const toDateStr = (d: Date) => d.toISOString().slice(0, 10);
+    const tomorrow = addDays(new Date(), 1);
+    const expectedStart = toDateStr(tomorrow);
+    const expectedEnd = toDateStr(addDays(tomorrow, 7));
+
     const res = await request(app)
       .post('/api/trips')
       .set('Cookie', authCookie(user.id))
@@ -99,10 +105,10 @@ describe('Create trip', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.trip).toBeDefined();
-    expect(res.body.trip.start_date).not.toBeNull();
-    expect(res.body.trip.end_date).not.toBeNull();
+    expect(res.body.trip.start_date).toBe(expectedStart);
+    expect(res.body.trip.end_date).toBe(expectedEnd);
 
-    // Should have 8 days (start + 7 day window)
+    // Should have 8 days (start through end inclusive)
     const daysWithDate = testDb.prepare('SELECT * FROM days WHERE trip_id = ? AND date IS NOT NULL').all(res.body.trip.id) as any[];
     expect(daysWithDate).toHaveLength(8);
   });
