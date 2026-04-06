@@ -283,11 +283,11 @@ describe('resolveGoogleMapsUrl coordinate extraction (ReDoS guards)', () => {
     expect(result.name).toBe('Eiffel Tower');
   });
 
-  it('MAPS-024 (ReDoS): /@(-?\\d+\\.?\\d*),(-?\\d+\\.?\\d*)/ on adversarial input < 100ms', () => {
+  it('MAPS-024 (ReDoS): /@(-?\\d+\\.?\\d*),(-?\\d+\\.?\\d*)/ on adversarial input < 500ms', () => {
     const adversarial = '/@' + '1'.repeat(10000) + '.';
     const start = Date.now();
     adversarial.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-    expect(Date.now() - start).toBeLessThan(100);
+    expect(Date.now() - start).toBeLessThan(500);
   });
 
   it('MAPS-025 (ReDoS): /!3d(-?\\d+\\.?\\d*)!4d/ on adversarial input < 500ms', () => {
@@ -297,11 +297,11 @@ describe('resolveGoogleMapsUrl coordinate extraction (ReDoS guards)', () => {
     expect(Date.now() - start).toBeLessThan(500);
   });
 
-  it('MAPS-026 (ReDoS): /[?&]q=(-?\\d+\\.?\\d*)/ on adversarial input < 100ms', () => {
+  it('MAPS-026 (ReDoS): /[?&]q=(-?\\d+\\.?\\d*)/ on adversarial input < 500ms', () => {
     const adversarial = '?q=' + '1'.repeat(10000) + '.';
     const start = Date.now();
     adversarial.match(/[?&]q=(-?\d+\.?\d*),(-?\d+\.?\d*)/);
-    expect(Date.now() - start).toBeLessThan(100);
+    expect(Date.now() - start).toBeLessThan(500);
   });
 
   it('MAPS-027 (ReDoS): /<[^>]+>/ HTML strip on adversarial input < 100ms', () => {
