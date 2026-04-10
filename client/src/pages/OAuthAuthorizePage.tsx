@@ -12,6 +12,7 @@ interface ValidateResult {
   scopes?: string[]
   consentRequired?: boolean
   loginRequired?: boolean
+  scopeSelectable?: boolean
 }
 
 type PageState = 'loading' | 'login_required' | 'consent' | 'auto_approving' | 'error' | 'done'
@@ -216,14 +217,16 @@ export default function OAuthAuthorizePage(): React.ReactElement {
             </p>
             <button
               onClick={() => submitConsent(true)}
-              disabled={submitting || selectedScopes.length === 0}
+              disabled={submitting || (validation?.scopeSelectable === true && selectedScopes.length === 0)}
               className="w-full px-4 py-2.5 rounded-lg text-sm font-medium text-white disabled:opacity-60 transition-opacity"
               style={{ background: 'var(--accent-primary, #4f46e5)' }}>
               {submitting
                 ? 'Authorizing…'
-                : selectedScopes.length === 0
+                : validation?.scopeSelectable && selectedScopes.length === 0
                   ? 'Select at least one scope'
-                  : `Approve (${selectedScopes.length} scope${selectedScopes.length !== 1 ? 's' : ''})`}
+                  : validation?.scopeSelectable
+                    ? `Approve (${selectedScopes.length} scope${selectedScopes.length !== 1 ? 's' : ''})`
+                    : 'Approve Access'}
             </button>
             <button
               onClick={() => submitConsent(false)}
@@ -241,43 +244,69 @@ export default function OAuthAuthorizePage(): React.ReactElement {
             {Object.keys(scopesByGroup).length > 0 && (
               <div>
                 <p className="text-xs font-medium uppercase tracking-wide mb-4" style={{ color: 'var(--text-tertiary)' }}>
-                  Choose which permissions to grant
+                  {validation?.scopeSelectable ? 'Choose which permissions to grant' : 'Permissions requested'}
                 </p>
-                <div className="space-y-3">
-                  {Object.entries(scopesByGroup).map(([group, groupScopes]) => {
-                    const allGroupSelected = groupScopes.every(s => selectedScopes.includes(s))
-                    const someGroupSelected = groupScopes.some(s => selectedScopes.includes(s))
-                    return (
-                      <div key={group} className="rounded-lg border overflow-hidden" style={{ borderColor: 'var(--border-primary)' }}>
-                        {/* Group header with select-all toggle */}
-                        <label className="flex items-center gap-2.5 px-3 py-2 cursor-pointer" style={{ background: 'var(--bg-secondary)' }}>
-                          <input
-                            type="checkbox"
-                            checked={allGroupSelected}
-                            ref={el => { if (el) el.indeterminate = someGroupSelected && !allGroupSelected }}
-                            onChange={() => toggleGroup(groupScopes, allGroupSelected)}
-                            className="rounded flex-shrink-0"
-                          />
-                          <span className="text-xs font-semibold" style={{ color: 'var(--text-secondary)' }}>{group}</span>
-                          <span className="ml-auto text-xs" style={{ color: 'var(--text-tertiary)' }}>
-                            {groupScopes.filter(s => selectedScopes.includes(s)).length}/{groupScopes.length}
-                          </span>
-                        </label>
-                        {/* Individual scopes */}
-                        <div className="divide-y" style={{ borderColor: 'var(--border-primary)' }}>
+
+                {validation?.scopeSelectable ? (
+                  /* DCR client — user selects which scopes to grant */
+                  <div className="space-y-3">
+                    {Object.entries(scopesByGroup).map(([group, groupScopes]) => {
+                      const allGroupSelected = groupScopes.every(s => selectedScopes.includes(s))
+                      const someGroupSelected = groupScopes.some(s => selectedScopes.includes(s))
+                      return (
+                        <div key={group} className="rounded-lg border overflow-hidden" style={{ borderColor: 'var(--border-primary)' }}>
+                          <label className="flex items-center gap-2.5 px-3 py-2 cursor-pointer" style={{ background: 'var(--bg-secondary)' }}>
+                            <input
+                              type="checkbox"
+                              checked={allGroupSelected}
+                              ref={el => { if (el) el.indeterminate = someGroupSelected && !allGroupSelected }}
+                              onChange={() => toggleGroup(groupScopes, allGroupSelected)}
+                              className="rounded flex-shrink-0"
+                            />
+                            <span className="text-xs font-semibold" style={{ color: 'var(--text-secondary)' }}>{group}</span>
+                            <span className="ml-auto text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                              {groupScopes.filter(s => selectedScopes.includes(s)).length}/{groupScopes.length}
+                            </span>
+                          </label>
+                          <div className="divide-y" style={{ borderColor: 'var(--border-primary)' }}>
+                            {groupScopes.map(s => {
+                              const info = SCOPE_GROUPS[s]
+                              return (
+                                <label
+                                  key={s}
+                                  className="flex items-start gap-2.5 px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedScopes.includes(s)}
+                                    onChange={() => toggleScope(s)}
+                                    className="mt-0.5 rounded flex-shrink-0"
+                                  />
+                                  <span className="mt-0.5 text-base leading-none flex-shrink-0">
+                                    {s.endsWith(':delete') ? '🗑️' : s.endsWith(':write') ? '✏️' : '👁️'}
+                                  </span>
+                                  <div className="min-w-0">
+                                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{info?.label || s}</p>
+                                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{info?.description || ''}</p>
+                                  </div>
+                                </label>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  /* Settings-created client — scopes are fixed, show read-only */
+                  <div className="space-y-5">
+                    {Object.entries(scopesByGroup).map(([group, groupScopes]) => (
+                      <div key={group}>
+                        <p className="text-xs font-semibold mb-2" style={{ color: 'var(--text-secondary)' }}>{group}</p>
+                        <div className="space-y-1.5">
                           {groupScopes.map(s => {
                             const info = SCOPE_GROUPS[s]
-                            const checked = selectedScopes.includes(s)
                             return (
-                              <label
-                                key={s}
-                                className="flex items-start gap-2.5 px-3 py-2 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                                <input
-                                  type="checkbox"
-                                  checked={checked}
-                                  onChange={() => toggleScope(s)}
-                                  className="mt-0.5 rounded flex-shrink-0"
-                                />
+                              <div key={s} className="flex items-start gap-2.5 px-3 py-2 rounded-lg" style={{ background: 'var(--bg-secondary)' }}>
                                 <span className="mt-0.5 text-base leading-none flex-shrink-0">
                                   {s.endsWith(':delete') ? '🗑️' : s.endsWith(':write') ? '✏️' : '👁️'}
                                 </span>
@@ -285,14 +314,14 @@ export default function OAuthAuthorizePage(): React.ReactElement {
                                   <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{info?.label || s}</p>
                                   <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{info?.description || ''}</p>
                                 </div>
-                              </label>
+                              </div>
                             )
                           })}
                         </div>
                       </div>
-                    )
-                  })}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

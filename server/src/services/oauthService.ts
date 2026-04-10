@@ -532,6 +532,8 @@ export interface ValidateAuthorizeResult {
   consentRequired?: boolean;
   /** true when the request is valid but user is not authenticated */
   loginRequired?: boolean;
+  /** true when the client was registered via machine DCR — user may adjust scopes on the consent screen */
+  scopeSelectable?: boolean;
 }
 
 export function validateAuthorizeRequest(
@@ -596,6 +598,7 @@ export function validateAuthorizeRequest(
     client: { name: client.name, allowed_scopes: allowedScopes },
     scopes: grantedScopes,
     consentRequired,
+    scopeSelectable: client.created_via === 'dcr',
   };
 }
 
