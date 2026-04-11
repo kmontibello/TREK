@@ -10,6 +10,7 @@ import { ADDON_IDS } from '../addons';
 import { registerResources } from './resources';
 import { registerTools } from './tools';
 import { McpSession, sessions, revokeUserSessions, revokeUserSessionsForClient } from './sessionManager';
+import { writeAudit, getClientIp } from '../services/auditLog';
 
 export { revokeUserSessions, revokeUserSessionsForClient };
 
@@ -102,13 +103,14 @@ interface RateLimitEntry {
   count: number;
   windowStart: number;
 }
-const rateLimitMap = new Map<number, RateLimitEntry>();
+const rateLimitMap = new Map<string, RateLimitEntry>();
 
-function isRateLimited(userId: number): boolean {
+function isRateLimited(userId: number, clientId: string | null): boolean {
+  const key = `${userId}:${clientId ?? 'native'}`;
   const now = Date.now();
-  const entry = rateLimitMap.get(userId);
+  const entry = rateLimitMap.get(key);
   if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitMap.set(userId, { count: 1, windowStart: now });
+    rateLimitMap.set(key, { count: 1, windowStart: now });
     return false;
   }
   entry.count += 1;
@@ -136,13 +138,13 @@ const sessionSweepInterval = setInterval(() => {
     }
   }
   const rateCutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
-  for (const [uid, entry] of rateLimitMap) {
-    if (entry.windowStart < rateCutoff) rateLimitMap.delete(uid);
+  for (const [key, entry] of rateLimitMap) {
+    if (entry.windowStart < rateCutoff) rateLimitMap.delete(key);
   }
   if (cleaned > 0 || sessions.size > 0) {
     console.log(`[MCP] Session sweep: cleaned ${cleaned}, active ${sessions.size}`);
   }
-}, 10 * 60 * 1000); // sweep every 10 minutes
+}, 60 * 1000); // sweep every 1 minute
 
 // Prevent the interval from keeping the process alive if nothing else is running
 sessionSweepInterval.unref();
@@ -185,6 +187,20 @@ function verifyToken(authHeader: string | undefined): VerifyTokenResult | null {
   return { user, scopes: null, clientId: null, isStaticToken: false };
 }
 
+function logToolCallAudit(req: Request, userId: number, clientId: string | null): void {
+  const body = req.body as Record<string, unknown> | undefined;
+  if (body?.method !== 'tools/call') return;
+  const toolName = (body?.params as Record<string, unknown> | undefined)?.name;
+  if (typeof toolName !== 'string') return;
+  writeAudit({
+    userId,
+    action: 'mcp.tool_call',
+    resource: toolName,
+    details: { clientId: clientId ?? 'native' },
+    ip: getClientIp(req),
+  });
+}
+
 export async function mcpHandler(req: Request, res: Response): Promise<void> {
   if (!isAddonEnabled(ADDON_IDS.MCP)) {
     res.status(403).json({ error: 'MCP is not enabled' });
@@ -198,7 +214,7 @@ export async function mcpHandler(req: Request, res: Response): Promise<void> {
   }
   const { user, scopes, clientId, isStaticToken } = tokenResult;
 
-  if (isRateLimited(user.id)) {
+  if (isRateLimited(user.id, clientId)) {
     res.status(429).json({ error: 'Too many requests. Please slow down.' });
     return;
   }
@@ -216,7 +232,12 @@ export async function mcpHandler(req: Request, res: Response): Promise<void> {
       res.status(403).json({ error: 'Session belongs to a different user' });
       return;
     }
+    if (session.clientId !== clientId) {
+      res.status(403).json({ error: 'Session was created with a different OAuth client' });
+      return;
+    }
     session.lastActivity = Date.now();
+    logToolCallAudit(req, user.id, clientId);
     try {
       await session.transport.handleRequest(req, res, req.body);
     } catch (err) {
@@ -279,15 +300,26 @@ export async function mcpHandler(req: Request, res: Response): Promise<void> {
     },
   });
 
+  logToolCallAudit(req, user.id, clientId);
   try {
     await server.connect(transport);
     await transport.handleRequest(req, res, req.body);
   } catch (err) {
     console.error('[MCP] transport.handleRequest error:', err);
     if (!res.headersSent) {
-      res.status(500).json({ error: 'Internal MCP error', detail: String(err) });
+      res.status(500).json({ error: 'Internal MCP error' });
     }
   }
+}
+
+/** Invalidate all active MCP sessions (call when addon state changes so sessions re-create with updated tools). */
+export function invalidateMcpSessions(): void {
+  for (const [sid, session] of sessions) {
+    try { session.server.close(); } catch { /* ignore */ }
+    try { session.transport.close(); } catch { /* ignore */ }
+    sessions.delete(sid);
+  }
+  console.log('[MCP] All sessions invalidated due to addon state change');
 }
 
 /** Close all active MCP sessions (call during graceful shutdown). */

@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { getScopesByGroup } from '../../api/oauthScopes'
+import { useTranslation } from '../../i18n'
 
 interface Props {
   selected: string[]
   onChange: (scopes: string[]) => void
 }
 
-const scopesByGroup = getScopesByGroup()
-
 export default function ScopeGroupPicker({ selected, onChange }: Props): React.ReactElement {
+  const { t } = useTranslation()
   const [open, setOpen] = useState<Record<string, boolean>>({})
 
+  const scopesByGroup = getScopesByGroup(t)
   const allScopeKeys = Object.values(scopesByGroup).flat().map(s => s.scope)
   const allSelected  = allScopeKeys.every(s => selected.includes(s))
 
@@ -23,7 +24,7 @@ export default function ScopeGroupPicker({ selected, onChange }: Props): React.R
           onClick={() => onChange(allSelected ? [] : allScopeKeys)}
           className="text-xs px-2 py-0.5 rounded border transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
           style={{ borderColor: 'var(--border-primary)', color: 'var(--text-secondary)' }}>
-          {allSelected ? 'Deselect all' : 'Select all'}
+          {allSelected ? t('settings.oauth.modal.deselectAll') : t('settings.oauth.modal.selectAll')}
         </button>
       </div>
       <div className="space-y-1 max-h-96 overflow-y-auto pr-1">

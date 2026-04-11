@@ -370,6 +370,11 @@ export default function CollabChat({ tripId, currentUser }: CollabChatProps) {
   const [showEmoji, setShowEmoji] = useState(false)
   const [reactMenu, setReactMenu] = useState(null) // { msgId, x, y }
   const [deletingIds, setDeletingIds] = useState(new Set())
+  const deleteTimersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+
+  useEffect(() => {
+    return () => { deleteTimersRef.current.forEach(clearTimeout) }
+  }, [])
 
   const containerRef = useRef(null)
   const messagesRef = useRef(messages)
@@ -483,13 +488,14 @@ export default function CollabChat({ tripId, currentUser }: CollabChatProps) {
     requestAnimationFrame(() => {
       setDeletingIds(prev => new Set(prev).add(msgId))
     })
-    setTimeout(async () => {
+    const t = setTimeout(async () => {
       try {
         await collabApi.deleteMessage(tripId, msgId)
         setMessages(prev => prev.map(m => m.id === msgId ? { ...m, _deleted: true } : m))
       } catch {}
       setDeletingIds(prev => { const s = new Set(prev); s.delete(msgId); return s })
     }, 400)
+    deleteTimersRef.current.push(t)
   }, [tripId])
 
   const handleReact = useCallback(async (msgId, emoji) => {

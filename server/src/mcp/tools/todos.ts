@@ -17,8 +17,8 @@ import { isAddonEnabled } from '../../services/adminService';
 import { ADDON_IDS } from '../../addons';
 
 export function registerTodoTools(server: McpServer, userId: number, scopes: string[] | null): void {
-  const R = canRead(scopes, 'collab');
-  const W = canWrite(scopes, 'collab');
+  const R = canRead(scopes, 'todos');
+  const W = canWrite(scopes, 'todos');
 
   if (!isAddonEnabled(ADDON_IDS.PACKING)) return;
 

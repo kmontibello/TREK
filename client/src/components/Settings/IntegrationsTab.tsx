@@ -1,5 +1,5 @@
 import Section from './Section'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from '../../i18n'
 import { useToast } from '../shared/Toast'
 import { Trash2, Copy, Terminal, Plus, Check, KeyRound, ChevronDown, ChevronRight, RefreshCw } from 'lucide-react'
@@ -131,6 +131,11 @@ export default function IntegrationsTab(): React.ReactElement {
   const [mcpCreating, setMcpCreating] = useState(false)
   const [mcpDeleteId, setMcpDeleteId] = useState<number | null>(null)
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => { if (copyTimerRef.current) clearTimeout(copyTimerRef.current) }
+  }, [])
 
   const mcpEndpoint = `${window.location.origin}/mcp`
   const mcpJsonConfigOAuth = `{
@@ -195,7 +200,8 @@ export default function IntegrationsTab(): React.ReactElement {
   const handleCopy = (text: string, key: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedKey(key)
-      setTimeout(() => setCopiedKey(null), 2000)
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current)
+      copyTimerRef.current = setTimeout(() => setCopiedKey(null), 2000)
     })
   }
 

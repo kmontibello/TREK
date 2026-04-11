@@ -3,6 +3,7 @@ import { authenticate, adminOnly } from '../middleware/auth';
 import { AuthRequest } from '../types';
 import { writeAudit, getClientIp, logInfo } from '../services/auditLog';
 import * as svc from '../services/adminService';
+import { invalidateMcpSessions } from '../mcp';
 import { getPreferencesMatrix, setAdminPreferences } from '../services/notificationPreferencesService';
 
 const router = express.Router();
@@ -292,6 +293,8 @@ router.put('/addons/:id', (req: Request, res: Response) => {
     ip: getClientIp(req),
     details: result.auditDetails,
   });
+  // Invalidate all MCP sessions so they re-create with the updated addon tool set
+  invalidateMcpSessions();
   res.json({ addon: result.addon });
 });
 

@@ -16,8 +16,8 @@ import {
 import { canRead, canWrite } from '../scopes';
 
 export function registerAtlasTools(server: McpServer, userId: number, scopes: string[] | null): void {
-  const R = canRead(scopes, 'places');
-  const W = canWrite(scopes, 'places');
+  const R = canRead(scopes, 'atlas');
+  const W = canWrite(scopes, 'atlas');
 
   if (!isAddonEnabled(ADDON_IDS.ATLAS)) return;
 

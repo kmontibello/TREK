@@ -9,11 +9,12 @@ import {
 import { canRead } from '../scopes';
 
 export function registerMapsWeatherTools(server: McpServer, userId: number, scopes: string[] | null): void {
-  if (!canRead(scopes, 'media')) return;
+  const canGeo     = canRead(scopes, 'geo');
+  const canWeather = canRead(scopes, 'weather');
 
   // --- MAPS EXTRAS ---
 
-  server.registerTool(
+  if (canGeo) server.registerTool(
     'get_place_details',
     {
       description: 'Fetch detailed information about a place by its Google Place ID.',
@@ -30,7 +31,7 @@ export function registerMapsWeatherTools(server: McpServer, userId: number, scop
     }
   );
 
-  server.registerTool(
+  if (canGeo) server.registerTool(
     'reverse_geocode',
     {
       description: 'Get a human-readable address for given coordinates.',
@@ -48,7 +49,7 @@ export function registerMapsWeatherTools(server: McpServer, userId: number, scop
     }
   );
 
-  server.registerTool(
+  if (canGeo) server.registerTool(
     'resolve_maps_url',
     {
       description: 'Resolve a Google Maps share URL to coordinates and place name.',
@@ -66,7 +67,7 @@ export function registerMapsWeatherTools(server: McpServer, userId: number, scop
 
   // --- WEATHER ---
 
-  server.registerTool(
+  if (canWeather) server.registerTool(
     'get_weather',
     {
       description: 'Get weather forecast for a location and date.',
@@ -88,7 +89,7 @@ export function registerMapsWeatherTools(server: McpServer, userId: number, scop
     }
   );
 
-  server.registerTool(
+  if (canWeather) server.registerTool(
     'get_detailed_weather',
     {
       description: 'Get hourly/detailed weather forecast for a location and date.',

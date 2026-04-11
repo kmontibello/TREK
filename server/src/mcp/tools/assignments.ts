@@ -111,6 +111,8 @@ export function registerAssignmentTools(server: McpServer, userId: number, scope
     async ({ tripId, assignmentId, newDayId, oldDayId, orderIndex }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!getAssignmentForTrip(assignmentId, tripId)) return { content: [{ type: 'text' as const, text: 'Assignment not found.' }], isError: true };
+      if (!getDay(newDayId, tripId)) return { content: [{ type: 'text' as const, text: 'Day not found.' }], isError: true };
       const result = moveAssignment(assignmentId, newDayId, orderIndex ?? 0, oldDayId);
       safeBroadcast(tripId, 'assignment:moved', { assignment: result.assignment, oldDayId: result.oldDayId });
       return ok({ assignment: result.assignment });
@@ -129,6 +131,7 @@ export function registerAssignmentTools(server: McpServer, userId: number, scope
     },
     async ({ tripId, assignmentId }) => {
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!getAssignmentForTrip(assignmentId, tripId)) return { content: [{ type: 'text' as const, text: 'Assignment not found.' }], isError: true };
       const participants = getAssignmentParticipants(assignmentId);
       return ok({ participants });
     }
@@ -148,6 +151,7 @@ export function registerAssignmentTools(server: McpServer, userId: number, scope
     async ({ tripId, assignmentId, userIds }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!getAssignmentForTrip(assignmentId, tripId)) return { content: [{ type: 'text' as const, text: 'Assignment not found.' }], isError: true };
       const participants = setAssignmentParticipants(assignmentId, userIds);
       safeBroadcast(tripId, 'assignment:participants', { assignmentId, participants });
       return ok({ participants });

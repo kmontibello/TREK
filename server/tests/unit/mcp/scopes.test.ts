@@ -24,14 +24,21 @@ describe('ALL_SCOPES', () => {
     expect(ALL_SCOPES).toContain('trips:write');
     expect(ALL_SCOPES).toContain('trips:delete');
     expect(ALL_SCOPES).toContain('trips:share');
+    expect(ALL_SCOPES).toContain('places:read');
+    expect(ALL_SCOPES).toContain('places:write');
+    expect(ALL_SCOPES).toContain('atlas:read');
+    expect(ALL_SCOPES).toContain('atlas:write');
     expect(ALL_SCOPES).toContain('budget:read');
     expect(ALL_SCOPES).toContain('budget:write');
     expect(ALL_SCOPES).toContain('packing:read');
     expect(ALL_SCOPES).toContain('packing:write');
+    expect(ALL_SCOPES).toContain('todos:read');
+    expect(ALL_SCOPES).toContain('todos:write');
     expect(ALL_SCOPES).toContain('collab:read');
     expect(ALL_SCOPES).toContain('collab:write');
-    expect(ALL_SCOPES).toContain('places:read');
-    expect(ALL_SCOPES).toContain('places:write');
+    expect(ALL_SCOPES).toContain('geo:read');
+    expect(ALL_SCOPES).toContain('weather:read');
+    expect(ALL_SCOPES).not.toContain('media:read');
   });
 
   it('is a non-empty array', () => {

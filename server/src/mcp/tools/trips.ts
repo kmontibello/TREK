@@ -167,8 +167,9 @@ export function registerTripTools(server: McpServer, userId: number, scopes: str
       const canReadBudget  = budgetEnabled  && canRead(scopes, 'budget');
       const canReadPacking = packingEnabled && canRead(scopes, 'packing');
       const canReadCollab  = collabEnabled  && canRead(scopes, 'collab');
+      const canReadTodos   = packingEnabled && canRead(scopes, 'todos');
       const canReadRes     = canRead(scopes, 'reservations');
-      const todos = canReadPacking ? listTodoItems(tripId) : [];
+      const todos = canReadTodos ? listTodoItems(tripId) : [];
       let pollCount = 0;
       let messageCount = 0;
       if (canReadCollab) {

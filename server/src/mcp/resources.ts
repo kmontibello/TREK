@@ -200,7 +200,7 @@ export function registerResources(server: McpServer, userId: number, scopes: str
   );
 
   // Trip to-do list
-  if (isAddonEnabled(ADDON_IDS.PACKING) && canRead(scopes, 'collab')) server.registerResource(
+  if (isAddonEnabled(ADDON_IDS.PACKING) && canRead(scopes, 'todos')) server.registerResource(
     'trip-todos',
     new ResourceTemplate('trek://trips/{tripId}/todos', { list: undefined }),
     { description: 'To-do items for a trip, ordered by position', mimeType: 'application/json' },
@@ -224,7 +224,7 @@ export function registerResources(server: McpServer, userId: number, scopes: str
   );
 
   // User's bucket list
-  if (isAddonEnabled(ADDON_IDS.ATLAS) && canRead(scopes, 'places')) server.registerResource(
+  if (isAddonEnabled(ADDON_IDS.ATLAS) && canRead(scopes, 'atlas')) server.registerResource(
     'bucket-list',
     'trek://bucket-list',
     { description: 'Your personal travel bucket list', mimeType: 'application/json' },
@@ -235,7 +235,7 @@ export function registerResources(server: McpServer, userId: number, scopes: str
   );
 
   // User's visited countries
-  if (isAddonEnabled(ADDON_IDS.ATLAS) && canRead(scopes, 'places')) server.registerResource(
+  if (isAddonEnabled(ADDON_IDS.ATLAS) && canRead(scopes, 'atlas')) server.registerResource(
     'visited-countries',
     'trek://visited-countries',
     { description: 'Countries you have marked as visited in Atlas', mimeType: 'application/json' },
@@ -296,7 +296,7 @@ export function registerResources(server: McpServer, userId: number, scopes: str
   );
 
   // Atlas stats and regions (addon-gated)
-  if (isAddonEnabled(ADDON_IDS.ATLAS) && canRead(scopes, 'places')) {
+  if (isAddonEnabled(ADDON_IDS.ATLAS) && canRead(scopes, 'atlas')) {
     server.registerResource(
       'atlas-stats',
       'trek://atlas/stats',

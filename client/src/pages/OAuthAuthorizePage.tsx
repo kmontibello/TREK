@@ -3,6 +3,7 @@ import { useAuthStore } from '../store/authStore'
 import { oauthApi } from '../api/client'
 import { SCOPE_GROUPS } from '../api/oauthScopes'
 import { Lock, ShieldCheck, AlertTriangle, Loader2, LogIn } from 'lucide-react'
+import { useTranslation } from '../i18n'
 
 interface ValidateResult {
   valid: boolean
@@ -18,6 +19,7 @@ interface ValidateResult {
 type PageState = 'loading' | 'login_required' | 'consent' | 'auto_approving' | 'error' | 'done'
 
 export default function OAuthAuthorizePage(): React.ReactElement {
+  const { t } = useTranslation()
   const { isAuthenticated, isLoading: authLoading, loadUser } = useAuthStore()
   const [pageState, setPageState] = useState<PageState>('loading')
   const [validation, setValidation] = useState<ValidateResult | null>(null)
@@ -126,18 +128,18 @@ export default function OAuthAuthorizePage(): React.ReactElement {
     window.location.href = '/login?redirect=' + encodeURIComponent(next)
   }
 
-  // Group requested scopes by their human-readable group
+  // Group requested scopes by their translated group name
   const scopesByGroup = React.useMemo(() => {
     const requested = validation?.scopes || []
     const groups: Record<string, string[]> = {}
     for (const s of requested) {
-      const info = SCOPE_GROUPS[s]
-      const group = info?.group || 'Other'
+      const keys = SCOPE_GROUPS[s]
+      const group = keys ? t(keys.groupKey) : 'Other'
       if (!groups[group]) groups[group] = []
       groups[group].push(s)
     }
     return groups
-  }, [validation])
+  }, [validation, t])
 
   // ---- Render states ----
 
@@ -270,7 +272,7 @@ export default function OAuthAuthorizePage(): React.ReactElement {
                           </label>
                           <div className="divide-y" style={{ borderColor: 'var(--border-primary)' }}>
                             {groupScopes.map(s => {
-                              const info = SCOPE_GROUPS[s]
+                              const keys = SCOPE_GROUPS[s]
                               return (
                                 <label
                                   key={s}
@@ -285,8 +287,8 @@ export default function OAuthAuthorizePage(): React.ReactElement {
                                     {s.endsWith(':delete') ? '🗑️' : s.endsWith(':write') ? '✏️' : '👁️'}
                                   </span>
                                   <div className="min-w-0">
-                                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{info?.label || s}</p>
-                                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{info?.description || ''}</p>
+                                    <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{keys ? t(keys.labelKey) : s}</p>
+                                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{keys ? t(keys.descriptionKey) : ''}</p>
                                   </div>
                                 </label>
                               )
@@ -304,15 +306,15 @@ export default function OAuthAuthorizePage(): React.ReactElement {
                         <p className="text-xs font-semibold mb-2" style={{ color: 'var(--text-secondary)' }}>{group}</p>
                         <div className="space-y-1.5">
                           {groupScopes.map(s => {
-                            const info = SCOPE_GROUPS[s]
+                            const keys = SCOPE_GROUPS[s]
                             return (
                               <div key={s} className="flex items-start gap-2.5 px-3 py-2 rounded-lg" style={{ background: 'var(--bg-secondary)' }}>
                                 <span className="mt-0.5 text-base leading-none flex-shrink-0">
                                   {s.endsWith(':delete') ? '🗑️' : s.endsWith(':write') ? '✏️' : '👁️'}
                                 </span>
                                 <div className="min-w-0">
-                                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{info?.label || s}</p>
-                                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{info?.description || ''}</p>
+                                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{keys ? t(keys.labelKey) : s}</p>
+                                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{keys ? t(keys.descriptionKey) : ''}</p>
                                 </div>
                               </div>
                             )

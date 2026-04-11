@@ -33,6 +33,7 @@ interface PendingCode {
   expiresAt: number;
 }
 
+const MAX_PENDING_CODES = 500;
 const pendingCodes = new Map<string, PendingCode>();
 
 setInterval(() => {
@@ -89,11 +90,11 @@ function timingSafeEqualHex(a: string, b: string): boolean {
 }
 
 function generateAccessToken(): string {
-  return 'trekoa_' + randomBytes(24).toString('hex');
+  return 'trekoa_' + randomBytes(32).toString('hex');
 }
 
 function generateRefreshToken(): string {
-  return 'trekrf_' + randomBytes(24).toString('hex');
+  return 'trekrf_' + randomBytes(32).toString('hex');
 }
 
 // ---------------------------------------------------------------------------
@@ -244,7 +245,8 @@ export function createAuthCode(params: {
   scopes: string[];
   codeChallenge: string;
   codeChallengeMethod: 'S256';
-}): string {
+}): string | null {
+  if (pendingCodes.size >= MAX_PENDING_CODES) return null;
   const rawCode = randomBytes(32).toString('hex');
   pendingCodes.set(rawCode, { ...params, expiresAt: Date.now() + AUTH_CODE_TTL_MS });
   return rawCode;

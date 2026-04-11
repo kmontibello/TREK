@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp';
 import { z } from 'zod';
 import { isDemoUser } from '../../services/authService';
-import { listTags, createTag, updateTag, deleteTag } from '../../services/tagService';
+import { listTags, createTag, getTagByIdAndUser, updateTag, deleteTag } from '../../services/tagService';
 import {
   TOOL_ANNOTATIONS_READONLY, TOOL_ANNOTATIONS_WRITE,
   TOOL_ANNOTATIONS_DELETE, TOOL_ANNOTATIONS_NON_IDEMPOTENT,
@@ -58,6 +58,7 @@ export function registerTagTools(server: McpServer, userId: number, scopes: stri
     },
     async ({ tagId, name, color }) => {
       if (isDemoUser(userId)) return demoDenied();
+      if (!getTagByIdAndUser(tagId, userId)) return { content: [{ type: 'text' as const, text: 'Tag not found.' }], isError: true };
       const tag = updateTag(tagId, name, color);
       if (!tag) return { content: [{ type: 'text' as const, text: 'Tag not found.' }], isError: true };
       return ok({ tag });
@@ -75,6 +76,7 @@ export function registerTagTools(server: McpServer, userId: number, scopes: stri
     },
     async ({ tagId }) => {
       if (isDemoUser(userId)) return demoDenied();
+      if (!getTagByIdAndUser(tagId, userId)) return { content: [{ type: 'text' as const, text: 'Tag not found.' }], isError: true };
       deleteTag(tagId);
       return ok({ success: true });
     }

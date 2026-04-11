@@ -78,6 +78,7 @@ export function registerDayTools(server: McpServer, userId: number, scopes: stri
     async ({ tripId, dayId }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!getDay(dayId, tripId)) return { content: [{ type: 'text' as const, text: 'Day not found.' }], isError: true };
       deleteDay(dayId);
       safeBroadcast(tripId, 'day:deleted', { id: dayId });
       return ok({ success: true });
@@ -152,6 +153,7 @@ export function registerDayTools(server: McpServer, userId: number, scopes: stri
     async ({ tripId, accommodationId }) => {
       if (isDemoUser(userId)) return demoDenied();
       if (!canAccessTrip(tripId, userId)) return noAccess();
+      if (!getAccommodation(accommodationId, tripId)) return { content: [{ type: 'text' as const, text: 'Accommodation not found.' }], isError: true };
       const { linkedReservationId } = deleteAccommodation(accommodationId);
       safeBroadcast(tripId, 'accommodation:deleted', { id: accommodationId, linkedReservationId });
       return ok({ success: true, linkedReservationId });

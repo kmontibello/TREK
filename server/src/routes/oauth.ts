@@ -193,8 +193,11 @@ oauthPublicRouter.post('/oauth/register', dcrLimiter, (req: Request, res: Respon
   const authMethod = typeof body.token_endpoint_auth_method === 'string' ? body.token_endpoint_auth_method : 'client_secret_post';
   const isPublic = authMethod === 'none';
 
-  // Resolve requested scopes — default to all supported scopes if not specified
-  const rawScope = typeof body.scope === 'string' ? body.scope : ALL_SCOPES.join(' ');
+  // Resolve requested scopes — scope is required; no implicit full-access grant
+  if (typeof body.scope !== 'string' || body.scope.trim() === '') {
+    return res.status(400).json({ error: 'invalid_client_metadata', error_description: 'scope is required' });
+  }
+  const rawScope = body.scope;
   const requestedScopes = rawScope.split(' ').filter(s => (ALL_SCOPES as string[]).includes(s));
   if (requestedScopes.length === 0) {
     return res.status(400).json({ error: 'invalid_client_metadata', error_description: 'No valid scopes requested' });
@@ -350,6 +353,10 @@ oauthApiRouter.post('/authorize', requireCookieAuth, (req: Request, res: Respons
     codeChallenge: code_challenge,
     codeChallengeMethod: 'S256',
   });
+
+  if (!code) {
+    return res.status(503).json({ error: 'server_error', error_description: 'Authorization server is temporarily unavailable' });
+  }
 
   const url = new URL(redirect_uri);
   url.searchParams.set('code', code);

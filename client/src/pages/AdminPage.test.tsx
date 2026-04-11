@@ -321,7 +321,7 @@ describe('AdminPage', () => {
 
       await waitFor(() => expect(screen.getByRole('button', { name: /^users$/i })).toBeInTheDocument());
 
-      expect(screen.queryByRole('button', { name: /mcp tokens/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /mcp access/i })).not.toBeInTheDocument();
     });
 
     it('shows MCP Tokens tab button when MCP addon is enabled', async () => {
@@ -337,7 +337,7 @@ describe('AdminPage', () => {
       render(<AdminPage />);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /mcp tokens/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /mcp access/i })).toBeInTheDocument();
       });
     });
   });
@@ -646,9 +646,9 @@ describe('AdminPage', () => {
       seedStore(useAuthStore, { isAuthenticated: true, user: buildAdmin() });
       render(<AdminPage />);
 
-      await waitFor(() => expect(screen.getByRole('button', { name: /mcp tokens/i })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByRole('button', { name: /mcp access/i })).toBeInTheDocument());
 
-      fireEvent.click(screen.getByRole('button', { name: /mcp tokens/i }));
+      fireEvent.click(screen.getByRole('button', { name: /mcp access/i }));
 
       expect(screen.getByTestId('mcp-tokens-panel')).toBeInTheDocument();
     });
