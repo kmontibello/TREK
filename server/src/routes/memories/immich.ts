@@ -60,10 +60,10 @@ router.get('/browse', authenticate, async (req: Request, res: Response) => {
 
 router.post('/search', authenticate, async (req: Request, res: Response) => {
   const authReq = req as AuthRequest;
-  const { from, to } = req.body;
-  const result = await searchPhotos(authReq.user.id, from, to);
+  const { from, to, page, size } = req.body;
+  const result = await searchPhotos(authReq.user.id, from, to, Number(page) || 1, Math.min(Number(size) || 50, 200));
   if (result.error) return res.status(result.status!).json({ error: result.error });
-  res.json({ assets: result.assets });
+  res.json({ assets: result.assets, hasMore: result.hasMore });
 });
 
 // ── Asset Details ──────────────────────────────────────────────────────────

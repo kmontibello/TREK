@@ -1369,12 +1369,18 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
   const [albums, setAlbums] = useState<any[]>([])
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(false)
+  const [searchPage, setSearchPage] = useState(1)
+  const [searchFrom, setSearchFrom] = useState('')
+  const [searchTo, setSearchTo] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [customFrom, setCustomFrom] = useState('')
   const [customTo, setCustomTo] = useState('')
   const [targetEntryId, setTargetEntryId] = useState<number | null>(null)
   const [addToOpen, setAddToOpen] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
 
   // compute trip range
   const tripRange = useMemo(() => {
@@ -1392,19 +1398,31 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
     return abortRef.current.signal
   }
 
-  const searchPhotos = async (from: string, to: string) => {
+  const searchPhotos = async (from: string, to: string, page: number = 1, append: boolean = false) => {
     const signal = cancelPending()
-    setLoading(true)
-    setPhotos([])
+    if (page === 1) { setLoading(true); setPhotos([]) } else { setLoadingMore(true) }
+    setSearchFrom(from)
+    setSearchTo(to)
+    setSearchPage(page)
     try {
       const res = await fetch(`/api/integrations/memories/${provider}/search`, {
         method: 'POST', credentials: 'include', signal,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from, to }),
+        body: JSON.stringify({ from, to, page, size: 50 }),
       })
-      if (res.ok) setPhotos((await res.json()).assets || [])
+      if (res.ok) {
+        const data = await res.json()
+        const assets = data.assets || []
+        setPhotos(prev => append ? [...prev, ...assets] : assets)
+        setHasMore(!!data.hasMore)
+      }
     } catch (e: any) { if (e.name !== 'AbortError') {} }
-    if (!signal.aborted) setLoading(false)
+    if (!signal.aborted) { setLoading(false); setLoadingMore(false) }
+  }
+
+  const loadMorePhotos = () => {
+    if (loadingMore || !hasMore) return
+    searchPhotos(searchFrom, searchTo, searchPage + 1, true)
   }
 
   const loadAlbumPhotos = async (albumId: string) => {
@@ -1681,6 +1699,17 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
                 )
               })}
             </div>
+            {/* Infinite scroll trigger */}
+            {hasMore && (
+              <div className="flex justify-center py-4 mt-2" ref={el => {
+                if (!el) return
+                const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) loadMorePhotos() }, { rootMargin: '200px' })
+                obs.observe(el)
+                return () => obs.disconnect()
+              }}>
+                <div className="w-5 h-5 border-2 border-zinc-300 border-t-zinc-900 dark:border-zinc-600 dark:border-t-white rounded-full animate-spin" />
+              </div>
+            )}
           )}
         </div>
 
