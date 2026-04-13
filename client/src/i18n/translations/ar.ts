@@ -1546,6 +1546,8 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'محدد',
   'journey.picker.addTo': 'إضافة إلى',
   'journey.picker.newGallery': 'معرض جديد',
+  'journey.picker.selectAll': 'تحديد الكل',
+  'journey.picker.deselectAll': 'إلغاء تحديد الكل',
   'journey.picker.noAlbums': 'لم يتم العثور على ألبومات',
   'journey.picker.selectDate': 'اختر تاريخ',
   'journey.picker.search': 'بحث',

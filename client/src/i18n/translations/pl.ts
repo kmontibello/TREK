@@ -2014,6 +2014,8 @@ const pl: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'wybranych',
   'journey.picker.addTo': 'Dodaj do',
   'journey.picker.newGallery': 'Nowa galeria',
+  'journey.picker.selectAll': 'Zaznacz wszystko',
+  'journey.picker.deselectAll': 'Odznacz wszystko',
   'journey.picker.noAlbums': 'Nie znaleziono albumów',
   'journey.picker.selectDate': 'Wybierz datę',
   'journey.picker.search': 'Szukaj',

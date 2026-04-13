@@ -2020,6 +2020,8 @@ const br: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'selecionados',
   'journey.picker.addTo': 'Adicionar a',
   'journey.picker.newGallery': 'Nova galeria',
+  'journey.picker.selectAll': 'Selecionar tudo',
+  'journey.picker.deselectAll': 'Desmarcar tudo',
   'journey.picker.noAlbums': 'Nenhum álbum encontrado',
   'journey.picker.selectDate': 'Selecionar data',
   'journey.picker.search': 'Pesquisar',

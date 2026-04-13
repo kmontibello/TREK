@@ -2010,6 +2010,8 @@ const de: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'ausgewählt',
   'journey.picker.addTo': 'Hinzufügen zu',
   'journey.picker.newGallery': 'Neue Galerie',
+  'journey.picker.selectAll': 'Alle auswählen',
+  'journey.picker.deselectAll': 'Alle abwählen',
   'journey.picker.noAlbums': 'Keine Alben gefunden',
   'journey.picker.selectDate': 'Datum wählen',
   'journey.picker.search': 'Suchen',

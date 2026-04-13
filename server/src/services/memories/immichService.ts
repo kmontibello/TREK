@@ -285,6 +285,32 @@ export async function listAlbums(
   }
 }
 
+export async function getAlbumPhotos(
+  userId: number,
+  albumId: string,
+): Promise<{ assets?: any[]; error?: string; status?: number }> {
+  const creds = getImmichCredentials(userId);
+  if (!creds) return { error: 'Immich not configured', status: 400 };
+
+  try {
+    const resp = await safeFetch(`${creds.immich_url}/api/albums/${albumId}`, {
+      headers: { 'x-api-key': creds.immich_api_key, 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(15000) as any,
+    });
+    if (!resp.ok) return { error: 'Failed to fetch album', status: resp.status };
+    const albumData = await resp.json() as { assets?: any[] };
+    const assets = (albumData.assets || []).filter((a: any) => a.type === 'IMAGE').map((a: any) => ({
+      id: a.id,
+      takenAt: a.fileCreatedAt || a.createdAt,
+      city: a.exifInfo?.city || null,
+      country: a.exifInfo?.country || null,
+    }));
+    return { assets };
+  } catch {
+    return { error: 'Could not reach Immich', status: 502 };
+  }
+}
+
 export function listAlbumLinks(tripId: string) {
   return db.prepare(`
     SELECT tal.*, u.username

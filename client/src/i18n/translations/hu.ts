@@ -2019,6 +2019,8 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'kiválasztva',
   'journey.picker.addTo': 'Hozzáadás',
   'journey.picker.newGallery': 'Új galéria',
+  'journey.picker.selectAll': 'Összes kijelölése',
+  'journey.picker.deselectAll': 'Összes kijelölés törlése',
   'journey.picker.noAlbums': 'Nem található album',
   'journey.picker.selectDate': 'Dátum választása',
   'journey.picker.search': 'Keresés',

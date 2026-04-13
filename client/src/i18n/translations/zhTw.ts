@@ -1979,6 +1979,8 @@ const zhTw: Record<string, string> = {
   'journey.picker.selected': '已選擇',
   'journey.picker.addTo': '新增至',
   'journey.picker.newGallery': '新相簿',
+  'journey.picker.selectAll': '全選',
+  'journey.picker.deselectAll': '取消全選',
   'journey.picker.noAlbums': '未找到相簿',
   'journey.picker.selectDate': '選擇日期',
   'journey.picker.search': '搜尋',

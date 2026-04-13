@@ -2018,6 +2018,8 @@ const ru: Record<string, string> = {
   'journey.picker.selected': 'выбрано',
   'journey.picker.addTo': 'Добавить в',
   'journey.picker.newGallery': 'Новая галерея',
+  'journey.picker.selectAll': 'Выбрать все',
+  'journey.picker.deselectAll': 'Снять выбор',
   'journey.picker.noAlbums': 'Альбомы не найдены',
   'journey.picker.selectDate': 'Выберите дату',
   'journey.picker.search': 'Поиск',

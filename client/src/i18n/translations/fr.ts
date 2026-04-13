@@ -2018,6 +2018,8 @@ const fr: Record<string, string> = {
   'journey.picker.selected': 'sélectionnés',
   'journey.picker.addTo': 'Ajouter à',
   'journey.picker.newGallery': 'Nouvelle galerie',
+  'journey.picker.selectAll': 'Tout sélectionner',
+  'journey.picker.deselectAll': 'Tout désélectionner',
   'journey.picker.noAlbums': 'Aucun album trouvé',
   'journey.picker.selectDate': 'Sélectionner une date',
   'journey.picker.search': 'Rechercher',

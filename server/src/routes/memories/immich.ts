@@ -13,6 +13,7 @@ import {
   searchPhotos,
   streamImmichAsset,
   listAlbums,
+  getAlbumPhotos,
   syncAlbumAssets,
   getAssetInfo,
   isValidAssetId,
@@ -111,6 +112,13 @@ router.get('/albums', authenticate, async (req: Request, res: Response) => {
   const result = await listAlbums(authReq.user.id);
   if (result.error) return res.status(result.status!).json({ error: result.error });
   res.json({ albums: result.albums });
+});
+
+router.get('/albums/:albumId/photos', authenticate, async (req: Request, res: Response) => {
+  const authReq = req as AuthRequest;
+  const result = await getAlbumPhotos(authReq.user.id, req.params.albumId);
+  if (result.error) return res.status(result.status!).json({ error: result.error });
+  res.json({ assets: result.assets });
 });
 
 router.post('/trips/:tripId/album-links/:linkId/sync', authenticate, async (req: Request, res: Response) => {

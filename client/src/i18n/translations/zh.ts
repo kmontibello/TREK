@@ -2018,6 +2018,8 @@ const zh: Record<string, string> = {
   'journey.picker.selected': '已选择',
   'journey.picker.addTo': '添加到',
   'journey.picker.newGallery': '新相册',
+  'journey.picker.selectAll': '全选',
+  'journey.picker.deselectAll': '取消全选',
   'journey.picker.noAlbums': '未找到相册',
   'journey.picker.selectDate': '选择日期',
   'journey.picker.search': '搜索',

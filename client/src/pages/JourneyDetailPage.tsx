@@ -1398,6 +1398,15 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
     setLoading(false)
   }
 
+  const loadAlbumPhotos = async (albumId: string) => {
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/integrations/memories/${provider}/albums/${albumId}/photos`, { credentials: 'include' })
+      if (res.ok) setPhotos((await res.json()).assets || [])
+    } catch {}
+    setLoading(false)
+  }
+
   const loadAlbums = async () => {
     try {
       const res = await fetch(`/api/integrations/memories/${provider}/albums`, { credentials: 'include' })
@@ -1511,7 +1520,7 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
                 {albums.map((a: any) => (
                   <button
                     key={a.id}
-                    onClick={() => { setSelectedAlbum(a.id); searchPhotos(a.startDate || '2000-01-01', a.endDate || '2099-01-01') }}
+                    onClick={() => { setSelectedAlbum(a.id); loadAlbumPhotos(a.id) }}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap flex-shrink-0 border ${
                       selectedAlbum === a.id
                         ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-zinc-900 dark:border-white'
@@ -1577,6 +1586,33 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
 
         {/* Photo grid */}
         <div className="flex-1 overflow-y-auto p-4">
+          {/* Select all toggle */}
+          {!loading && photos.length > 0 && (() => {
+            const selectable = photos.filter((a: any) => !existingAssetIds.has(a.id))
+            const allSelected = selectable.length > 0 && selectable.every((a: any) => selected.has(a.id))
+            if (selectable.length === 0) return null
+            return (
+              <button
+                onClick={() => {
+                  if (allSelected) {
+                    setSelected(new Set())
+                  } else {
+                    setSelected(new Set(selectable.map((a: any) => a.id)))
+                  }
+                }}
+                className="mb-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+              >
+                <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${
+                  allSelected
+                    ? 'bg-zinc-900 dark:bg-white border-zinc-900 dark:border-white'
+                    : 'border-zinc-300 dark:border-zinc-600'
+                }`}>
+                  {allSelected && <Check size={9} className="text-white dark:text-zinc-900" strokeWidth={3} />}
+                </div>
+                {allSelected ? t('journey.picker.deselectAll') : t('journey.picker.selectAll')} ({selectable.length})
+              </button>
+            )
+          })()}
           {loading ? (
             <div className="flex justify-center py-12">
               <div className="w-6 h-6 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />

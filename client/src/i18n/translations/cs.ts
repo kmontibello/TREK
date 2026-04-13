@@ -2022,6 +2022,8 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'vybráno',
   'journey.picker.addTo': 'Přidat do',
   'journey.picker.newGallery': 'Nová galerie',
+  'journey.picker.selectAll': 'Vybrat vše',
+  'journey.picker.deselectAll': 'Zrušit výběr',
   'journey.picker.noAlbums': 'Žádná alba nenalezena',
   'journey.picker.selectDate': 'Vyberte datum',
   'journey.picker.search': 'Hledat',

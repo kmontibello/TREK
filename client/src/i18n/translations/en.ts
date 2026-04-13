@@ -2037,6 +2037,8 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'journey.picker.selected': 'selected',
   'journey.picker.addTo': 'Add to',
   'journey.picker.newGallery': 'New Gallery',
+  'journey.picker.selectAll': 'Select all',
+  'journey.picker.deselectAll': 'Deselect all',
   'journey.picker.noAlbums': 'No albums found',
   'journey.picker.selectDate': 'Select date',
   'journey.picker.search': 'Search',

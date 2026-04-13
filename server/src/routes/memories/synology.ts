@@ -7,6 +7,7 @@ import {
     getSynologyStatus,
     testSynologyConnection,
     listSynologyAlbums,
+    getSynologyAlbumPhotos,
     syncSynologyAlbumLink,
     searchSynologyPhotos,
     getSynologyAssetInfo,
@@ -75,6 +76,11 @@ router.post('/test', authenticate, async (req: Request, res: Response) => {
 router.get('/albums', authenticate, async (req: Request, res: Response) => {
     const authReq = req as AuthRequest;
     handleServiceResult(res, await listSynologyAlbums(authReq.user.id));
+});
+
+router.get('/albums/:albumId/photos', authenticate, async (req: Request, res: Response) => {
+    const authReq = req as AuthRequest;
+    handleServiceResult(res, await getSynologyAlbumPhotos(authReq.user.id, req.params.albumId));
 });
 
 router.post('/trips/:tripId/album-links/:linkId/sync', authenticate, async (req: Request, res: Response) => {

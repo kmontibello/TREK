@@ -2018,6 +2018,8 @@ const nl: Record<string, string> = {
   'journey.picker.selected': 'geselecteerd',
   'journey.picker.addTo': 'Toevoegen aan',
   'journey.picker.newGallery': 'Nieuwe galerij',
+  'journey.picker.selectAll': 'Alles selecteren',
+  'journey.picker.deselectAll': 'Alles deselecteren',
   'journey.picker.noAlbums': 'Geen albums gevonden',
   'journey.picker.selectDate': 'Selecteer datum',
   'journey.picker.search': 'Zoeken',

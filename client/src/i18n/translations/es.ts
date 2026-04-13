@@ -2024,6 +2024,8 @@ const es: Record<string, string> = {
   'journey.picker.selected': 'seleccionados',
   'journey.picker.addTo': 'Añadir a',
   'journey.picker.newGallery': 'Nueva galería',
+  'journey.picker.selectAll': 'Seleccionar todo',
+  'journey.picker.deselectAll': 'Deseleccionar todo',
   'journey.picker.noAlbums': 'No se encontraron álbumes',
   'journey.picker.selectDate': 'Seleccionar fecha',
   'journey.picker.search': 'Buscar',
