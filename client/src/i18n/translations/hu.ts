@@ -1,6 +1,8 @@
 const hu: Record<string, string | { name: string; category: string }[]> = {
   // Általános
   'common.save': 'Mentés',
+  'common.showMore': 'Továbbiak',
+  'common.showLess': 'Kevesebb',
   'common.cancel': 'Mégse',
   'common.delete': 'Törlés',
   'common.edit': 'Szerkesztés',
@@ -1897,11 +1899,14 @@ const hu: Record<string, string | { name: string; category: string }[]> = {
   'journey.stats.entries': 'Bejegyzések',
   'journey.stats.photos': 'Fotók',
   'journey.stats.places': 'Helyszínek',
+  'journey.skeletons.show': 'Javaslatok megjelenítése',
+  'journey.skeletons.hide': 'Javaslatok elrejtése',
   'journey.verdict.lovedIt': 'Imádtam',
   'journey.verdict.couldBeBetter': 'Lehetne jobb',
   'journey.synced.places': 'helyszín',
   'journey.synced.synced': 'szinkronizálva',
   'journey.editor.uploadPhotos': 'Fotók feltöltése',
+  'journey.editor.uploading': 'Feltöltés...',
   'journey.editor.fromGallery': 'Galériából',
   'journey.editor.allPhotosAdded': 'Minden fotó már hozzáadva',
   'journey.editor.writeStory': 'Írd meg a történeted...',

@@ -1,6 +1,8 @@
 const fr: Record<string, string> = {
   // Common
   'common.save': 'Enregistrer',
+  'common.showMore': 'Voir plus',
+  'common.showLess': 'Voir moins',
   'common.cancel': 'Annuler',
   'common.delete': 'Supprimer',
   'common.edit': 'Modifier',
@@ -1896,11 +1898,14 @@ const fr: Record<string, string> = {
   'journey.stats.entries': 'Entrées',
   'journey.stats.photos': 'Photos',
   'journey.stats.places': 'Lieux',
+  'journey.skeletons.show': 'Afficher les suggestions',
+  'journey.skeletons.hide': 'Masquer les suggestions',
   'journey.verdict.lovedIt': 'Adoré',
   'journey.verdict.couldBeBetter': 'Pourrait être mieux',
   'journey.synced.places': 'lieux',
   'journey.synced.synced': 'synchronisé',
   'journey.editor.uploadPhotos': 'Téléverser des photos',
+  'journey.editor.uploading': 'Envoi...',
   'journey.editor.fromGallery': 'Depuis la galerie',
   'journey.editor.allPhotosAdded': 'Toutes les photos ont déjà été ajoutées',
   'journey.editor.writeStory': 'Écrivez votre histoire...',

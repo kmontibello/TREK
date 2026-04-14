@@ -1,6 +1,8 @@
 const ru: Record<string, string> = {
   // Common
   'common.save': 'Сохранить',
+  'common.showMore': 'Показать больше',
+  'common.showLess': 'Показать меньше',
   'common.cancel': 'Отмена',
   'common.delete': 'Удалить',
   'common.edit': 'Редактировать',
@@ -1896,11 +1898,14 @@ const ru: Record<string, string> = {
   'journey.stats.entries': 'Записей',
   'journey.stats.photos': 'Фото',
   'journey.stats.places': 'Мест',
+  'journey.skeletons.show': 'Показать предложения',
+  'journey.skeletons.hide': 'Скрыть предложения',
   'journey.verdict.lovedIt': 'Понравилось',
   'journey.verdict.couldBeBetter': 'Могло быть лучше',
   'journey.synced.places': 'мест',
   'journey.synced.synced': 'синхронизировано',
   'journey.editor.uploadPhotos': 'Загрузить фото',
+  'journey.editor.uploading': 'Загрузка...',
   'journey.editor.fromGallery': 'Из галереи',
   'journey.editor.allPhotosAdded': 'Все фото уже добавлены',
   'journey.editor.writeStory': 'Напишите свою историю...',

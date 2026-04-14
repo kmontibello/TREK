@@ -1,6 +1,8 @@
 const en: Record<string, string | { name: string; category: string }[]> = {
   // Common
   'common.save': 'Save',
+  'common.showMore': 'Show more',
+  'common.showLess': 'Show less',
   'common.cancel': 'Cancel',
   'common.delete': 'Delete',
   'common.edit': 'Edit',
@@ -1906,6 +1908,8 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'journey.stats.entries': 'Entries',
   'journey.stats.photos': 'Photos',
   'journey.stats.places': 'Places',
+  'journey.skeletons.show': 'Show suggestions',
+  'journey.skeletons.hide': 'Hide suggestions',
 
   // Journey Detail — Verdict
   'journey.verdict.lovedIt': 'Loved it',
@@ -1917,6 +1921,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Journey Entry Editor
   'journey.editor.uploadPhotos': 'Upload photos',
+  'journey.editor.uploading': 'Uploading...',
   'journey.editor.fromGallery': 'From Gallery',
   'journey.editor.allPhotosAdded': 'All photos already added',
   'journey.editor.writeStory': 'Write your story...',

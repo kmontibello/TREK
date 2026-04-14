@@ -5,6 +5,8 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
 
   // Common
   'common.save': 'حفظ',
+  'common.showMore': 'عرض المزيد',
+  'common.showLess': 'عرض أقل',
   'common.cancel': 'إلغاء',
   'common.delete': 'حذف',
   'common.edit': 'تعديل',
@@ -1557,6 +1559,8 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
   'journey.detail.backToJourney': 'العودة للمجلة',
   'journey.detail.day': 'اليوم {number}',
   'journey.detail.places': 'أماكن',
+  'journey.skeletons.show': 'إظهار الاقتراحات',
+  'journey.skeletons.hide': 'إخفاء الاقتراحات',
 
   // Journey — Invite
   'journey.invite.role': 'الدور',
@@ -1567,6 +1571,7 @@ const ar: Record<string, string | { name: string; category: string }[]> = {
 
   // Journey Entry Editor
   'journey.editor.uploadPhotos': 'رفع صور',
+  'journey.editor.uploading': '...جارٍ الرفع',
   'journey.editor.fromGallery': 'من المعرض',
   'journey.editor.addAnother': 'إضافة آخر',
   'journey.editor.makeFirst': 'جعله الأول',

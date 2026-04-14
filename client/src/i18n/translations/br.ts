@@ -1,6 +1,8 @@
 const br: Record<string, string | { name: string; category: string }[]> = {
   // Common
   'common.save': 'Salvar',
+  'common.showMore': 'Mostrar mais',
+  'common.showLess': 'Mostrar menos',
   'common.cancel': 'Cancelar',
   'common.delete': 'Excluir',
   'common.edit': 'Editar',
@@ -1895,11 +1897,14 @@ const br: Record<string, string | { name: string; category: string }[]> = {
   'journey.stats.entries': 'Entradas',
   'journey.stats.photos': 'Fotos',
   'journey.stats.places': 'Lugares',
+  'journey.skeletons.show': 'Mostrar sugestões',
+  'journey.skeletons.hide': 'Ocultar sugestões',
   'journey.verdict.lovedIt': 'Adorei',
   'journey.verdict.couldBeBetter': 'Poderia ser melhor',
   'journey.synced.places': 'lugares',
   'journey.synced.synced': 'sincronizado',
   'journey.editor.uploadPhotos': 'Enviar fotos',
+  'journey.editor.uploading': 'Enviando...',
   'journey.editor.fromGallery': 'Da galeria',
   'journey.editor.allPhotosAdded': 'Todas as fotos já foram adicionadas',
   'journey.editor.writeStory': 'Escreva sua história...',

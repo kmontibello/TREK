@@ -1,6 +1,8 @@
 const zh: Record<string, string> = {
   // Common
   'common.save': '保存',
+  'common.showMore': '显示更多',
+  'common.showLess': '收起',
   'common.cancel': '取消',
   'common.delete': '删除',
   'common.edit': '编辑',
@@ -1896,11 +1898,14 @@ const zh: Record<string, string> = {
   'journey.stats.entries': '条目',
   'journey.stats.photos': '照片',
   'journey.stats.places': '地点',
+  'journey.skeletons.show': '显示建议',
+  'journey.skeletons.hide': '隐藏建议',
   'journey.verdict.lovedIt': '非常喜欢',
   'journey.verdict.couldBeBetter': '有待改进',
   'journey.synced.places': '个地点',
   'journey.synced.synced': '已同步',
   'journey.editor.uploadPhotos': '上传照片',
+  'journey.editor.uploading': '上传中...',
   'journey.editor.fromGallery': '从相册',
   'journey.editor.allPhotosAdded': '所有照片已添加',
   'journey.editor.writeStory': '写下你的故事...',

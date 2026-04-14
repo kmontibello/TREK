@@ -1,6 +1,8 @@
 const cs: Record<string, string | { name: string; category: string }[]> = {
   // Společné (Common)
   'common.save': 'Uložit',
+  'common.showMore': 'Zobrazit více',
+  'common.showLess': 'Zobrazit méně',
   'common.cancel': 'Zrušit',
   'common.delete': 'Smazat',
   'common.edit': 'Upravit',
@@ -1900,11 +1902,14 @@ const cs: Record<string, string | { name: string; category: string }[]> = {
   'journey.stats.entries': 'Záznamy',
   'journey.stats.photos': 'Fotky',
   'journey.stats.places': 'Místa',
+  'journey.skeletons.show': 'Zobrazit návrhy',
+  'journey.skeletons.hide': 'Skrýt návrhy',
   'journey.verdict.lovedIt': 'Skvělé',
   'journey.verdict.couldBeBetter': 'Mohlo by být lepší',
   'journey.synced.places': 'místa',
   'journey.synced.synced': 'synchronizováno',
   'journey.editor.uploadPhotos': 'Nahrát fotky',
+  'journey.editor.uploading': 'Nahrávání...',
   'journey.editor.fromGallery': 'Z galerie',
   'journey.editor.allPhotosAdded': 'Všechny fotky již přidány',
   'journey.editor.writeStory': 'Napište svůj příběh...',

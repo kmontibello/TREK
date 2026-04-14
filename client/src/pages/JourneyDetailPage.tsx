@@ -18,7 +18,7 @@ import {
   Clock, Package, Image, ChevronRight,
   UserPlus, Plus, Minus, Calendar, Camera, BookOpen, X, Check, ImagePlus, Trash2, Pencil,
   Laugh, Smile, Meh, Annoyed, Frown,
-  Sun, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, ChevronDown,
+  Sun, CloudSun, Cloud, CloudRain, CloudLightning, Snowflake, ChevronDown, Eye, EyeOff,
 } from 'lucide-react'
 import type { JourneyEntry, JourneyPhoto, JourneyDetail } from '../store/journeyStore'
 
@@ -92,10 +92,15 @@ export default function JourneyDetailPage() {
   const [showAddTrip, setShowAddTrip] = useState(false)
   const [unlinkTrip, setUnlinkTrip] = useState<{ trip_id: number; title: string } | null>(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [hideSkeletons, setHideSkeletons] = useState(false)
 
   useEffect(() => {
     if (id) loadJourney(Number(id)).catch(() => {})
   }, [id])
+
+  useEffect(() => {
+    if (current?.hide_skeletons !== undefined) setHideSkeletons(current.hide_skeletons)
+  }, [current?.hide_skeletons])
 
   useEffect(() => {
     if (notFound) {
@@ -193,7 +198,7 @@ export default function JourneyDetailPage() {
     )
   }
 
-  const timelineEntries = current.entries.filter(e => e.title !== 'Gallery' && e.title !== '[Trip Photos]')
+  const timelineEntries = current.entries.filter(e => e.title !== 'Gallery' && e.title !== '[Trip Photos]' && (!hideSkeletons || e.type !== 'skeleton'))
   const dayGroups = groupByDate(timelineEntries)
   const sortedDates = [...dayGroups.keys()].sort()
 
@@ -243,7 +248,21 @@ export default function JourneyDetailPage() {
                   </button>
                   <div className="flex items-center gap-1.5">
                     <button onClick={() => { import('../components/PDF/JourneyBookPDF').then(m => m.downloadJourneyBookPDF(current)) }} className="w-[34px] h-[34px] rounded-lg bg-white/15 backdrop-blur flex items-center justify-center hover:bg-white/25"><Download size={14} /></button>
-                    <button onClick={() => setShowSettings(true)} className="w-[34px] h-[34px] rounded-lg bg-white/15 backdrop-blur flex items-center justify-center hover:bg-white/25"><Share2 size={14} /></button>
+                    <div className="relative group">
+                      <button
+                        onClick={async () => {
+                          const next = !hideSkeletons
+                          setHideSkeletons(next)
+                          await journeyApi.updatePreferences(current.id, { hide_skeletons: next })
+                        }}
+                        className={`w-[34px] h-[34px] rounded-lg backdrop-blur flex items-center justify-center ${hideSkeletons ? 'bg-white/30' : 'bg-white/15 hover:bg-white/25'}`}
+                      >
+                        {hideSkeletons ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
+                      <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-[11px] font-medium whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity">
+                        {hideSkeletons ? t('journey.skeletons.show') : t('journey.skeletons.hide')}
+                      </span>
+                    </div>
                     <button onClick={() => setShowSettings(true)} className="w-[34px] h-[34px] rounded-lg bg-white/15 backdrop-blur flex items-center justify-center hover:bg-white/25"><MoreHorizontal size={14} /></button>
                   </div>
                 </div>
@@ -753,6 +772,7 @@ function GalleryView({ entries, journeyId, userId, trips, onPhotoClick, onRefres
   const [showPicker, setShowPicker] = useState(false)
   const [pickerProvider, setPickerProvider] = useState<string | null>(null)
   const [availableProviders, setAvailableProviders] = useState<{ id: string; name: string }[]>([])
+  const [galleryUploading, setGalleryUploading] = useState(false)
   const toast = useToast()
 
   // check which providers are enabled AND connected for the current user
@@ -797,27 +817,28 @@ function GalleryView({ entries, journeyId, userId, trips, onPhotoClick, onRefres
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files?.length) return
-    // find existing "Gallery" entry or create one
-    let galleryEntry = entries.find(e => e.title === 'Gallery' && e.type === 'entry')
-    let entryId = galleryEntry?.id
-    if (!entryId) {
-      try {
+    setGalleryUploading(true)
+    try {
+      // find existing "Gallery" entry or create one
+      let galleryEntry = entries.find(e => e.title === 'Gallery' && e.type === 'entry')
+      let entryId = galleryEntry?.id
+      if (!entryId) {
         const entry = await journeyApi.createEntry(journeyId, {
           title: t('journey.share.gallery'),
           entry_date: new Date().toISOString().split('T')[0],
           type: 'entry',
         })
         entryId = entry.id
-      } catch { return }
-    }
-    const formData = new FormData()
-    for (const f of files) formData.append('photos', f)
-    try {
+      }
+      const formData = new FormData()
+      for (const f of files) formData.append('photos', f)
       await journeyApi.uploadPhotos(entryId, formData)
       toast.success(t('journey.photosUploaded', { count: files.length }))
       onRefresh()
     } catch {
       toast.error(t('journey.settings.coverFailed'))
+    } finally {
+      setGalleryUploading(false)
     }
     e.target.value = ''
   }
@@ -855,10 +876,14 @@ function GalleryView({ entries, journeyId, userId, trips, onPhotoClick, onRefres
         <div className="flex items-center gap-2">
           <button
             onClick={() => galleryFileRef.current?.click()}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[11px] font-medium hover:bg-zinc-800 dark:hover:bg-zinc-100"
+            disabled={galleryUploading}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[11px] font-medium hover:bg-zinc-800 dark:hover:bg-zinc-100 disabled:opacity-50"
           >
-            <Plus size={12} />
-            {t('common.upload')}
+            {galleryUploading ? (
+              <><div className="w-3 h-3 border-2 border-white/30 dark:border-zinc-900/30 border-t-white dark:border-t-zinc-900 rounded-full animate-spin" /> {t('journey.editor.uploading')}</>
+            ) : (
+              <><Plus size={12} /> {t('common.upload')}</>
+            )}
           </button>
           {availableProviders.map(p => (
             <button
@@ -903,11 +928,11 @@ function GalleryView({ entries, journeyId, userId, trips, onPhotoClick, onRefres
               >
                 <X size={12} />
               </button>
-              {photo.provider !== 'local' && (
+              {photo.provider && photo.provider !== 'local' && (
                 <div className="absolute top-1.5 left-1.5">
                   <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full bg-black/70 backdrop-blur text-white flex items-center gap-1">
                     <RefreshCw size={7} />
-                    {photo.provider === 'immich' ? 'Immich' : 'Synology'}
+                    {photo.provider === 'immich' ? 'Immich' : photo.provider === 'synology' ? 'Synology' : photo.provider}
                   </span>
                 </div>
               )}
@@ -967,6 +992,7 @@ function GalleryView({ entries, journeyId, userId, trips, onPhotoClick, onRefres
 // ── Expandable Story ─────────────────────────────────────────────────────
 
 function ExpandableStory({ story }: { story: string }) {
+  const { t } = useTranslation()
   const [expanded, setExpanded] = useState(false)
   const [clamped, setClamped] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -992,16 +1018,24 @@ function ExpandableStory({ story }: { story: string }) {
         onClick={() => { if (clamped || expanded) setExpanded(e => !e) }}
         className={`text-[13px] text-zinc-700 dark:text-zinc-300 leading-relaxed ${
           expanded ? '' : 'line-clamp-3 md:line-clamp-[9]'
-        } ${clamped || expanded ? 'cursor-pointer md:cursor-auto' : ''}`}
+        } ${clamped || expanded ? 'cursor-pointer' : ''}`}
       >
         <JournalBody text={story} />
       </div>
       {clamped && !expanded && (
         <button
           onClick={() => setExpanded(true)}
-          className="md:hidden mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-[10px] font-medium text-zinc-500 dark:text-zinc-400 active:scale-95 transition-transform"
+          className="mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-[10px] font-medium text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 active:scale-95 transition-all"
         >
-          Read more <ChevronRight size={10} />
+          {t('common.showMore')} <ChevronRight size={10} />
+        </button>
+      )}
+      {expanded && (
+        <button
+          onClick={() => setExpanded(false)}
+          className="mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-[10px] font-medium text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 active:scale-95 transition-all"
+        >
+          {t('common.showLess')} <ChevronRight size={10} className="rotate-[-90deg]" />
         </button>
       )}
     </div>
@@ -1452,8 +1486,12 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
         const assets = data.assets || []
         setPhotos(prev => append ? [...prev, ...assets] : assets)
         setHasMore(!!data.hasMore)
+      } else {
+        setHasMore(false)
       }
-    } catch (e: any) { if (e.name !== 'AbortError') {} }
+    } catch (e: any) {
+      if (e.name !== 'AbortError') setHasMore(false)
+    }
     if (!signal.aborted) { setLoading(false); setLoadingMore(false) }
   }
 
@@ -1466,6 +1504,7 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
     const signal = cancelPending()
     setLoading(true)
     setPhotos([])
+    setHasMore(false)
     try {
       const res = await fetch(`/api/integrations/memories/${provider}/albums/${albumId}/photos`, { credentials: 'include', signal })
       if (res.ok) setPhotos((await res.json()).assets || [])
@@ -1739,7 +1778,7 @@ function ProviderPicker({ provider, userId, entries, trips, existingAssetIds, on
                 )
               })}
               {/* Infinite scroll trigger */}
-              {hasMore && <ScrollTrigger onVisible={loadMorePhotos} loading={loadingMore} />}
+              {hasMore && !selectedAlbum && <ScrollTrigger onVisible={loadMorePhotos} loading={loadingMore} />}
             </div>
           )}
         </div>
@@ -1899,6 +1938,7 @@ function EntryEditor({ entry, journeyId, tripDates, galleryPhotos, onClose, onSa
   const [pros, setPros] = useState<string[]>(entry.pros_cons?.pros?.length ? entry.pros_cons.pros : [''])
   const [cons, setCons] = useState<string[]>(entry.pros_cons?.cons?.length ? entry.pros_cons.cons : [''])
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [photos, setPhotos] = useState<JourneyPhoto[]>(entry.photos || [])
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
   const [pendingLinkIds, setPendingLinkIds] = useState<number[]>([])
@@ -1947,10 +1987,15 @@ function EntryEditor({ entry, journeyId, tripDates, galleryPhotos, onClose, onSa
       // queue files for upload after save
       setPendingFiles(prev => [...prev, ...Array.from(files)])
     } else {
-      const formData = new FormData()
-      for (const f of files) formData.append('photos', f)
-      const newPhotos = await onUploadPhotos(entry.id, formData)
-      if (newPhotos?.length) setPhotos(prev => [...prev, ...newPhotos])
+      setUploading(true)
+      try {
+        const formData = new FormData()
+        for (const f of files) formData.append('photos', f)
+        const newPhotos = await onUploadPhotos(entry.id, formData)
+        if (newPhotos?.length) setPhotos(prev => [...prev, ...newPhotos])
+      } finally {
+        setUploading(false)
+      }
     }
   }
 
@@ -1978,9 +2023,14 @@ function EntryEditor({ entry, journeyId, tripDates, galleryPhotos, onClose, onSa
             <div className="flex gap-2">
               <button
                 onClick={() => fileRef.current?.click()}
-                className="flex-1 border border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg py-4 text-[12px] text-zinc-500 hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-center gap-1.5"
+                disabled={uploading}
+                className="flex-1 border border-dashed border-zinc-200 dark:border-zinc-700 rounded-lg py-4 text-[12px] text-zinc-500 hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
-                <Plus size={13} /> {t('journey.editor.uploadPhotos')}
+                {uploading ? (
+                  <><div className="w-3.5 h-3.5 border-2 border-zinc-300 border-t-zinc-600 rounded-full animate-spin" /> {t('journey.editor.uploading')}</>
+                ) : (
+                  <><Plus size={13} /> {t('journey.editor.uploadPhotos')}</>
+                )}
               </button>
               {galleryPhotos.length > 0 && (
                 <button
@@ -2688,8 +2738,8 @@ function JourneySettingsDialog({ journey, onClose, onSaved, onOpenInvite }: {
   }
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-5" style={{ background: 'rgba(9,9,11,0.6)', backdropFilter: 'blur(6px)' }}>
-      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] max-w-[480px] w-full max-h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center md:p-5 overscroll-none" style={{ background: 'rgba(9,9,11,0.6)', backdropFilter: 'blur(6px)' }} onClick={onClose} onTouchMove={e => { if (e.target === e.currentTarget) e.preventDefault() }}>
+      <div className="bg-white dark:bg-zinc-900 rounded-t-2xl md:rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] max-w-[480px] w-full max-h-[85vh] md:max-h-[90vh] flex flex-col overflow-hidden pb-safe" onClick={e => e.stopPropagation()}>
 
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200 dark:border-zinc-700">
           <h2 className="text-[16px] font-bold text-zinc-900 dark:text-white">{t('journey.settings.title')}</h2>
@@ -2698,7 +2748,7 @@ function JourneySettingsDialog({ journey, onClose, onSaved, onOpenInvite }: {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-5">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-5 flex flex-col gap-5">
           {/* Cover Image */}
           <div>
             <label className="text-[10px] font-semibold tracking-[0.12em] uppercase text-zinc-500 block mb-2">{t('journey.settings.coverImage')}</label>
@@ -2801,7 +2851,7 @@ function JourneySettingsDialog({ journey, onClose, onSaved, onOpenInvite }: {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 px-6 py-4 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50">
+        <div className="flex items-center gap-2 px-6 py-4 pb-6 md:pb-4 border-t border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50">
           <button
             onClick={() => setShowDeleteConfirm(true)}
             className="flex items-center gap-1.5 text-[12px] font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg px-2.5 py-2 mr-auto"

@@ -1,6 +1,8 @@
 const nl: Record<string, string> = {
   // Common
   'common.save': 'Opslaan',
+  'common.showMore': 'Meer tonen',
+  'common.showLess': 'Minder tonen',
   'common.cancel': 'Annuleren',
   'common.delete': 'Verwijderen',
   'common.edit': 'Bewerken',
@@ -1896,11 +1898,14 @@ const nl: Record<string, string> = {
   'journey.stats.entries': 'Vermeldingen',
   'journey.stats.photos': 'Foto\'s',
   'journey.stats.places': 'Plaatsen',
+  'journey.skeletons.show': 'Suggesties tonen',
+  'journey.skeletons.hide': 'Suggesties verbergen',
   'journey.verdict.lovedIt': 'Geweldig',
   'journey.verdict.couldBeBetter': 'Kan beter',
   'journey.synced.places': 'plaatsen',
   'journey.synced.synced': 'gesynchroniseerd',
   'journey.editor.uploadPhotos': 'Foto\'s uploaden',
+  'journey.editor.uploading': 'Uploaden...',
   'journey.editor.fromGallery': 'Uit galerij',
   'journey.editor.allPhotosAdded': 'Alle foto\'s al toegevoegd',
   'journey.editor.writeStory': 'Schrijf je verhaal...',
