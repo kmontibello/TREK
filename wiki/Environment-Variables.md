@@ -48,7 +48,7 @@ Verified in `server/src/config.ts` (line 107):
 
 ## HTTPS / Proxy
 
-These three variables work together behind a TLS-terminating reverse proxy. See [Reverse-Proxy] for the full explanation.
+These three variables work together behind a TLS-terminating reverse proxy. See [Reverse-Proxy](Reverse-Proxy) for the full explanation.
 
 | Variable | Description | Default |
 |---|---|---|
@@ -62,7 +62,7 @@ These three variables work together behind a TLS-terminating reverse proxy. See 
 
 ## OIDC / SSO
 
-For setup instructions, see [OIDC-SSO].
+For setup instructions, see [OIDC-SSO](OIDC-SSO).
 
 | Variable | Description | Default |
 |---|---|---|
@@ -110,7 +110,7 @@ Both variables must be set together. If either is omitted, the account is create
 
 ## MCP
 
-For setup instructions, see [MCP-Overview].
+For setup instructions, see [MCP-Overview](MCP-Overview).
 
 | Variable | Description | Default |
 |---|---|---|
@@ -129,7 +129,7 @@ For setup instructions, see [MCP-Overview].
 
 ## Related Pages
 
-- [Reverse-Proxy] — HTTPS proxy setup and the `FORCE_HTTPS` / `TRUST_PROXY` / `COOKIE_SECURE` trio
-- [OIDC-SSO] — complete OIDC configuration guide
-- [MCP-Overview] — MCP server setup and rate limiting
-- [Encryption-Key-Rotation] — rotating the `ENCRYPTION_KEY` without losing data
+- [Reverse-Proxy](Reverse-Proxy) — HTTPS proxy setup and the `FORCE_HTTPS` / `TRUST_PROXY` / `COOKIE_SECURE` trio
+- [OIDC-SSO](OIDC-SSO) — complete OIDC configuration guide
+- [MCP-Overview](MCP-Overview) — MCP server setup and rate limiting
+- [Encryption-Key-Rotation](Encryption-Key-Rotation) — rotating the `ENCRYPTION_KEY` without losing data
