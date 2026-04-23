@@ -484,7 +484,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Login
   'login.error': 'Login failed. Please check your credentials.',
-  'login.tagline': 'Your Trips.\nYour Plan.',
+  'login.tagline': 'Not just a getaway.\nA Tanqaways.',
   'login.description': 'Plan trips collaboratively with interactive maps, budgets, and real-time sync.',
   'login.features.maps': 'Interactive Maps',
   'login.features.mapsDesc': 'Google Places, routes & clustering',
@@ -727,7 +727,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   // Addons
   'admin.tabs.addons': 'Addons',
   'admin.addons.title': 'Addons',
-  'admin.addons.subtitle': 'Enable or disable features to customize your TREK experience.',
+  'admin.addons.subtitle': 'Enable or disable features to customize your Tanqaways experience.',
   'admin.addons.catalog.packing.name': 'Lists',
   'admin.addons.catalog.packing.description': 'Packing lists and to-do tasks for your trips',
   'admin.addons.catalog.budget.name': 'Budget',
@@ -760,7 +760,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   // Weather info
   'admin.weather.title': 'Weather Data',
   'admin.weather.badge': 'Since March 24, 2026',
-  'admin.weather.description': 'TREK uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
+  'admin.weather.description': 'Tanqaways uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
   'admin.weather.forecast': '16-day forecast',
   'admin.weather.forecastDesc': 'Previously 5 days (OpenWeatherMap)',
   'admin.weather.climate': 'Historical climate data',
@@ -897,9 +897,9 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'vacay.carryOver': 'Carry Over',
   'vacay.carryOverHint': 'Automatically carry remaining vacation days into the next year',
   'vacay.sharing': 'Sharing',
-  'vacay.sharingHint': 'Share your vacation plan with other TREK users',
+  'vacay.sharingHint': 'Share your vacation plan with other Tanqaways users',
   'vacay.owner': 'Owner',
-  'vacay.shareEmailPlaceholder': 'Email of TREK user',
+  'vacay.shareEmailPlaceholder': 'Email of Tanqaway user',
   'vacay.shareSuccess': 'Plan shared successfully',
   'vacay.shareError': 'Could not share plan',
   'vacay.dissolve': 'Dissolve Fusion',
@@ -911,7 +911,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'vacay.noData': 'No data',
   'vacay.changeColor': 'Change color',
   'vacay.inviteUser': 'Invite User',
-  'vacay.inviteHint': 'Invite another TREK user to share a combined vacation calendar.',
+  'vacay.inviteHint': 'Invite another Tanqaway user to share a combined vacation calendar.',
   'vacay.selectUser': 'Select user',
   'vacay.sendInvite': 'Send Invite',
   'vacay.inviteSent': 'Invite sent',
@@ -2229,7 +2229,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Journey — PDF Export
   'journey.pdf.journeyBook': 'Journey Book',
-  'journey.pdf.madeWith': 'Made with TREK',
+  'journey.pdf.madeWith': 'Made with Tanqaways powered by TREK',
   'journey.pdf.day': 'Day',
   'journey.pdf.theEnd': 'The End',
   'journey.pdf.saveAsPdf': 'Save as PDF',
