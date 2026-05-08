@@ -899,7 +899,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'vacay.sharing': 'Sharing',
   'vacay.sharingHint': 'Share your vacation plan with other Tanqaways users',
   'vacay.owner': 'Owner',
-  'vacay.shareEmailPlaceholder': 'Email of Tanqaway user',
+  'vacay.shareEmailPlaceholder': 'Email of Tanqaways user',
   'vacay.shareSuccess': 'Plan shared successfully',
   'vacay.shareError': 'Could not share plan',
   'vacay.dissolve': 'Dissolve Fusion',
@@ -911,7 +911,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'vacay.noData': 'No data',
   'vacay.changeColor': 'Change color',
   'vacay.inviteUser': 'Invite User',
-  'vacay.inviteHint': 'Invite another Tanqaway user to share a combined vacation calendar.',
+  'vacay.inviteHint': 'Invite another Tanqaways user to share a combined vacation calendar.',
   'vacay.selectUser': 'Select user',
   'vacay.sendInvite': 'Send Invite',
   'vacay.inviteSent': 'Invite sent',
@@ -2231,7 +2231,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Journey — PDF Export
   'journey.pdf.journeyBook': 'Journey Book',
-  'journey.pdf.madeWith': 'Made with Tanqaways powered by TREK',
+  'journey.pdf.madeWith': 'A Tanqaways journey powered by TREK',
   'journey.pdf.day': 'Day',
   'journey.pdf.theEnd': 'The End',
   'journey.pdf.saveAsPdf': 'Save as PDF',
@@ -2399,7 +2399,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // System notices — onboarding
   'system_notice.welcome_v1.title': 'Welcome to Tanqaways',
-  'system_notice.welcome_v1.body': 'Your all-in-one travel planner. Build itineraries, share trips with friends, and stay organized — online or offline.',
+  'system_notice.welcome_v1.body': 'Dont just a getaway, Tanqaway.',
   'system_notice.welcome_v1.cta_label': 'Plan a trip',
   'system_notice.welcome_v1.hero_alt': 'A scenic travel destination with Tanqaways planning UI overlay',
   'system_notice.welcome_v1.highlight_plan': 'Day-by-day itineraries for any trip',
