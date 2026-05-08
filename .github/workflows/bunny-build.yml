@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
 env:
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+  IMAGE_NAME: kmontibello/${{ github.event.repository.name }}
 jobs:
   build:
     name: Build and deploy
