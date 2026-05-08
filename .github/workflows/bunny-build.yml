@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
 env:
-  IMAGE_NAME: kmontibello/${{ github.event.repository.name }}
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
 jobs:
   build:
     name: Build and deploy
@@ -33,5 +33,5 @@ jobs:
         with:
           app_id: ${{ vars.APP_ID }}
           api_key: ${{ secrets.BUNNYNET_API_KEY }}
-          container: kmontibello/trek:latest
+          container: Container-1
           image_tag: "${{ github.sha }}"
