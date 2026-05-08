@@ -484,7 +484,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Login
   'login.error': 'Login failed. Please check your credentials.',
-  'login.tagline': 'Your Trips.\nYour Plan.',
+  'login.tagline': 'Not just a getaway.\nA Tanqaways.',
   'login.description': 'Plan trips collaboratively with interactive maps, budgets, and real-time sync.',
   'login.features.maps': 'Interactive Maps',
   'login.features.mapsDesc': 'Google Places, routes & clustering',
@@ -760,7 +760,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   // Weather info
   'admin.weather.title': 'Weather Data',
   'admin.weather.badge': 'Since March 24, 2026',
-  'admin.weather.description': 'TREK uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
+  'admin.weather.description': 'Tanqaways uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
   'admin.weather.forecast': '16-day forecast',
   'admin.weather.forecastDesc': 'Previously 5 days (OpenWeatherMap)',
   'admin.weather.climate': 'Historical climate data',
@@ -2225,7 +2225,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'journey.public.notFound': 'Not Found',
   'journey.public.notFoundMessage': 'This journey doesn\'t exist or the link has expired.',
   'journey.public.readOnly': 'Read-only · Public Journey',
-  'journey.public.tagline': 'Travel Resource & Exploration Kit',
+  'journey.public.tagline': 'A Tanwaways Experience',
   'journey.public.sharedVia': 'Shared via',
   'journey.public.madeWith': 'Made with',
 
