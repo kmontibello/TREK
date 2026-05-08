@@ -223,6 +223,23 @@ If `ALLOWED_ORIGINS` is not set, TREK allows all origins (development default). 
 
 ---
 
+## MCP OAuth flow does not initiate / "Connect" redirects but authentication never starts
+
+**Cause:** TREK builds the OAuth 2.1 redirect URI from `APP_URL`. If `APP_URL` is not set, the authorization URL is constructed from a localhost fallback that external clients (Claude.ai, Claude Desktop) cannot reach, so the OAuth handshake never completes.
+
+**Fix:** Set `APP_URL` to the public URL of your instance:
+
+```yaml
+environment:
+  - APP_URL=https://trek.example.com
+```
+
+Restart the container after adding the variable. Once set, clicking **Connect** in the MCP client should redirect to your TREK instance and complete the OAuth flow normally.
+
+> **Note:** `APP_URL` is required for any MCP OAuth integration. Without it, the authorization endpoint resolves to `http://localhost:<PORT>`, which is unreachable from external MCP clients.
+
+---
+
 ## MCP integration: "Too many requests" or "Session limit reached"
 
 **Cause:** Each user is limited to 300 MCP requests per minute and 20 concurrent sessions by default. Exceeding either limit returns a `429` response.
@@ -234,3 +251,55 @@ environment:
   - MCP_RATE_LIMIT=600          # requests per minute per user (default: 300)
   - MCP_MAX_SESSION_PER_USER=50 # concurrent sessions per user (default: 20)
 ```
+
+---
+
+## MCP requests blocked by Cloudflare WAF (Bot Fight Mode)
+
+**Cause:** When TREK is proxied through Cloudflare, **Bot Fight Mode** and **Super Bot Fight Mode** classify requests from ChatGPT as bots and block them at the WAF level — before the request ever reaches TREK. This is specific to ChatGPT; Claude.ai is not affected. ChatGPT's exit node IPs have low reputation scores in Cloudflare's threat intelligence and the User-Agent matches Cloudflare's automated-traffic heuristics. TREK itself never receives the request, so there is nothing in TREK's logs; the block is silent from TREK's perspective.
+
+Symptoms:
+- ChatGPT shows a connection error or times out immediately after OAuth completes.
+- Cloudflare's Security → Events log shows blocked requests to `/mcp` with action `block` and source `bfm` (Bot Fight Mode) or `managed_rule`.
+
+**Fix — Option 1: Disable Bot Fight Mode (free plan and paid plan)**
+
+In the Cloudflare dashboard for your zone: **Security → Bots → Bot Fight Mode → Off** (or Super Bot Fight Mode → Off).
+
+This is the only option available on the **free plan**. It disables bot blocking for the entire zone — all probe bots, scrapers, and crawlers that Cloudflare would otherwise block will reach your server. Only use this if you have no alternative.
+
+**Fix — Option 2: WAF skip rule for MCP paths (paid plan only)**
+
+> WAF custom rules require a **paid Cloudflare plan** (Pro or above). This option is not available on the free plan.
+
+Create a WAF skip rule that bypasses bot management only for the MCP and OAuth paths, leaving protection in place for the rest of the site:
+
+1. Go to **Security → WAF → Custom rules** and click **Create rule**.
+2. Enter the following expression (replace `trek.example.com` with your domain):
+
+   ```
+   (http.host eq "trek.example.com") and (
+     http.request.uri.path eq "/mcp" or
+     http.request.uri.path starts_with "/oauth/" or
+     http.request.uri.path starts_with "/.well-known/"
+   )
+   ```
+
+   This covers all paths that ChatGPT's servers hit during discovery, OAuth, and MCP calls:
+
+   | Path | Purpose |
+   |---|---|
+   | `/mcp` | MCP endpoint (GET, POST, DELETE) |
+   | `/oauth/authorize` | OAuth authorization handler |
+   | `/oauth/register` | Dynamic client registration |
+   | `/oauth/token` | Token issuance |
+   | `/oauth/userinfo` | User info (for domain claiming) |
+   | `/oauth/revoke` | Token revocation |
+   | `/.well-known/oauth-authorization-server` | RFC 8414 AS metadata |
+   | `/.well-known/oauth-protected-resource` | RFC 9728 flat resource metadata |
+   | `/.well-known/openid-configuration` | OIDC discovery |
+
+3. Set the action to **Skip** and check **Bot Fight Mode** (and/or **Super Bot Fight Mode**) under the skip options.
+4. Save and deploy.
+
+This allows MCP and OAuth traffic through while keeping Cloudflare bot protection active for all other paths.
