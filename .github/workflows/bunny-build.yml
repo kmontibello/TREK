@@ -33,5 +33,5 @@ jobs:
         with:
           app_id: ${{ vars.APP_ID }}
           api_key: ${{ secrets.BUNNYNET_API_KEY }}
-          container: trek
+          container: app
           image_tag: "${{ github.sha }}"
