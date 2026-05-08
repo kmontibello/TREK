@@ -182,6 +182,8 @@ export function ReservationModal({ isOpen, onClose, onSave, reservation, days, p
       let combinedEndTime = form.reservation_end_time
       if (form.end_date) {
         combinedEndTime = form.reservation_end_time ? `${form.end_date}T${form.reservation_end_time}` : form.end_date
+      } else if (form.reservation_end_time && form.reservation_time) {
+        combinedEndTime = `${form.reservation_time.split('T')[0]}T${form.reservation_end_time}`
       }
       if (isBudgetEnabled) {
         if (form.price) metadata.price = form.price
@@ -194,7 +196,7 @@ export function ReservationModal({ isOpen, onClose, onSave, reservation, days, p
         reservation_end_time: form.type === 'hotel' ? null : (combinedEndTime || null),
         location: form.location, confirmation_number: form.confirmation_number,
         notes: form.notes,
-        assignment_id: form.assignment_id || null,
+        assignment_id: (form.type === 'hotel' && !form.accommodation_id) ? null : (form.assignment_id || null),
         accommodation_id: form.type === 'hotel' ? (form.accommodation_id || null) : null,
         metadata: Object.keys(metadata).length > 0 ? metadata : null,
         endpoints: [],
@@ -457,7 +459,12 @@ export function ReservationModal({ isOpen, onClose, onSave, reservation, days, p
                 <label style={labelStyle}>{t('reservations.meta.fromDay')}</label>
                 <CustomSelect
                   value={form.hotel_start_day}
-                  onChange={value => set('hotel_start_day', value)}
+                  onChange={value => setForm(prev => ({
+                    ...prev,
+                    hotel_start_day: value,
+                    hotel_end_day: days.findIndex(d => d.id === value) > days.findIndex(d => d.id === prev.hotel_end_day)
+                      ? value : prev.hotel_end_day,
+                  }))}
                   placeholder={t('reservations.meta.selectDay')}
                   options={days.map(d => {
                     const dateBadge = d.date ? (formatDate(d.date, locale) ?? undefined) : undefined
@@ -475,7 +482,12 @@ export function ReservationModal({ isOpen, onClose, onSave, reservation, days, p
                 <label style={labelStyle}>{t('reservations.meta.toDay')}</label>
                 <CustomSelect
                   value={form.hotel_end_day}
-                  onChange={value => set('hotel_end_day', value)}
+                  onChange={value => setForm(prev => ({
+                    ...prev,
+                    hotel_start_day: days.findIndex(d => d.id === value) < days.findIndex(d => d.id === prev.hotel_start_day)
+                      ? value : prev.hotel_start_day,
+                    hotel_end_day: value,
+                  }))}
                   placeholder={t('reservations.meta.selectDay')}
                   options={days.map(d => {
                     const dateBadge = d.date ? (formatDate(d.date, locale) ?? undefined) : undefined
