@@ -2227,13 +2227,13 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'journey.public.notFound': 'Not Found',
   'journey.public.notFoundMessage': 'This journey doesn\'t exist or the link has expired.',
   'journey.public.readOnly': 'Read-only · Public Journey',
-  'journey.public.tagline': 'Travel Resource & Exploration Kit',
+  'journey.public.tagline': 'A Tanwaways Experience',
   'journey.public.sharedVia': 'Shared via',
   'journey.public.madeWith': 'Made with',
 
   // Journey — PDF Export
   'journey.pdf.journeyBook': 'Journey Book',
-  'journey.pdf.madeWith': 'Made with Tanqaways powered by TREK',
+  'journey.pdf.madeWith': 'A Tanqaways journey powered by TREK',
   'journey.pdf.day': 'Day',
   'journey.pdf.theEnd': 'The End',
   'journey.pdf.saveAsPdf': 'Save as PDF',
@@ -2401,7 +2401,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // System notices — onboarding
   'system_notice.welcome_v1.title': 'Welcome to Tanqaways',
-  'system_notice.welcome_v1.body': 'Your all-in-one travel planner. Build itineraries, share trips with friends, and stay organized — online or offline.',
+  'system_notice.welcome_v1.body': 'Dont just a getaway, Tanqaway.',
   'system_notice.welcome_v1.cta_label': 'Plan a trip',
   'system_notice.welcome_v1.hero_alt': 'A scenic travel destination with Tanqaways planning UI overlay',
   'system_notice.welcome_v1.highlight_plan': 'Day-by-day itineraries for any trip',
