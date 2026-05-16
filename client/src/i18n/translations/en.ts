@@ -411,7 +411,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'settings.about.featureRequestHint': 'Suggest a new feature',
   'settings.about.wikiHint': 'Documentation & guides',
   'settings.about.supporters.badge': 'Monthly Supporters',
-  'settings.about.supporters.title': 'Travel companions for TREK',
+  'settings.about.supporters.title': 'Travel companions for Tanqaways',
   'settings.about.supporters.subtitle': "While you're planning your next route, these folks are helping plan TREK's future. Their monthly contribution goes straight into development and real hours spent — so TREK stays Open Source.",
   'settings.about.supporters.since': 'supporter since {date}',
   'settings.about.supporters.tierEmpty': 'Be the first',
@@ -484,7 +484,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Login
   'login.error': 'Login failed. Please check your credentials.',
-  'login.tagline': 'Your Trips.\nYour Plan.',
+  'login.tagline': 'Not just a getaway.\nA Tanqaway.',
   'login.description': 'Plan trips collaboratively with interactive maps, budgets, and real-time sync.',
   'login.features.maps': 'Interactive Maps',
   'login.features.mapsDesc': 'Google Places, routes & clustering',
@@ -727,7 +727,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   // Addons
   'admin.tabs.addons': 'Addons',
   'admin.addons.title': 'Addons',
-  'admin.addons.subtitle': 'Enable or disable features to customize your TREK experience.',
+  'admin.addons.subtitle': 'Enable or disable features to customize your Tanqaways experience.',
   'admin.addons.catalog.packing.name': 'Lists',
   'admin.addons.catalog.packing.description': 'Packing lists and to-do tasks for your trips',
   'admin.addons.catalog.budget.name': 'Budget',
@@ -760,7 +760,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   // Weather info
   'admin.weather.title': 'Weather Data',
   'admin.weather.badge': 'Since March 24, 2026',
-  'admin.weather.description': 'TREK uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
+  'admin.weather.description': 'Tanqaways uses Open-Meteo as its weather data source. Open-Meteo is a free, open-source weather service — no API key required.',
   'admin.weather.forecast': '16-day forecast',
   'admin.weather.forecastDesc': 'Previously 5 days (OpenWeatherMap)',
   'admin.weather.climate': 'Historical climate data',
@@ -897,9 +897,9 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'vacay.carryOver': 'Carry Over',
   'vacay.carryOverHint': 'Automatically carry remaining vacation days into the next year',
   'vacay.sharing': 'Sharing',
-  'vacay.sharingHint': 'Share your vacation plan with other TREK users',
+  'vacay.sharingHint': 'Share your vacation plan with other Tanqaways users',
   'vacay.owner': 'Owner',
-  'vacay.shareEmailPlaceholder': 'Email of TREK user',
+  'vacay.shareEmailPlaceholder': 'Email of Tanqaways user',
   'vacay.shareSuccess': 'Plan shared successfully',
   'vacay.shareError': 'Could not share plan',
   'vacay.dissolve': 'Dissolve Fusion',
@@ -911,7 +911,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'vacay.noData': 'No data',
   'vacay.changeColor': 'Change color',
   'vacay.inviteUser': 'Invite User',
-  'vacay.inviteHint': 'Invite another TREK user to share a combined vacation calendar.',
+  'vacay.inviteHint': 'Invite another Tanqaways user to share a combined vacation calendar.',
   'vacay.selectUser': 'Select user',
   'vacay.sendInvite': 'Send Invite',
   'vacay.inviteSent': 'Invite sent',
@@ -2233,7 +2233,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Journey — PDF Export
   'journey.pdf.journeyBook': 'Journey Book',
-  'journey.pdf.madeWith': 'Made with TREK',
+  'journey.pdf.madeWith': 'Made with Tanqaways powered by TREK',
   'journey.pdf.day': 'Day',
   'journey.pdf.theEnd': 'The End',
   'journey.pdf.saveAsPdf': 'Save as PDF',
@@ -2368,7 +2368,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // System notices — 3.0.0 upgrade
   'system_notice.v3_photos.title': 'Photos have moved in 3.0',
-  'system_notice.v3_photos.body': '**Photos** in the Trip Planner have been removed. Your photos are safe — TREK never modified your Immich or Synology library.\n\nPhotos now live in the **Journey** addon. Journey is optional — if it is not yet available, ask your admin to enable it under Admin → Addons.',
+  'system_notice.v3_photos.body': '**Photos** in the Trip Planner have been removed. Your photos are safe — Tanqaways never modified your Immich or Synology library.\n\nPhotos now live in the **Journey** addon. Journey is optional — if it is not yet available, ask your admin to enable it under Admin → Addons.',
   'system_notice.v3_journey.title': 'Meet Journey — travel journal',
   'system_notice.v3_journey.body': 'Document your trips as rich travel stories with timelines, photo galleries, and interactive maps.',
   'system_notice.v3_journey.cta_label': 'Open Journey',
@@ -2400,10 +2400,10 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'system_notice.v3014_whitespace_collision.body': 'The 3.0.14 upgrade detected one or more username or email collisions caused by leading/trailing whitespace in stored accounts. Affected accounts were renamed automatically. Check the server logs for lines starting with **[migration] WHITESPACE COLLISION** to identify which accounts need review.',
 
   // System notices — onboarding
-  'system_notice.welcome_v1.title': 'Welcome to TREK',
+  'system_notice.welcome_v1.title': 'Welcome to Tanqaways',
   'system_notice.welcome_v1.body': 'Your all-in-one travel planner. Build itineraries, share trips with friends, and stay organized — online or offline.',
   'system_notice.welcome_v1.cta_label': 'Plan a trip',
-  'system_notice.welcome_v1.hero_alt': 'A scenic travel destination with TREK planning UI overlay',
+  'system_notice.welcome_v1.hero_alt': 'A scenic travel destination with Tanqaways planning UI overlay',
   'system_notice.welcome_v1.highlight_plan': 'Day-by-day itineraries for any trip',
   'system_notice.welcome_v1.highlight_share': 'Collaborate with travel partners',
   'system_notice.welcome_v1.highlight_offline': 'Works offline on mobile',
