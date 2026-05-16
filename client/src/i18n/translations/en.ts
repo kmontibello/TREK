@@ -411,7 +411,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'settings.about.featureRequestHint': 'Suggest a new feature',
   'settings.about.wikiHint': 'Documentation & guides',
   'settings.about.supporters.badge': 'Monthly Supporters',
-  'settings.about.supporters.title': 'Travel companions for TREK',
+  'settings.about.supporters.title': 'Travel companions for Tanqaways',
   'settings.about.supporters.subtitle': "While you're planning your next route, these folks are helping plan TREK's future. Their monthly contribution goes straight into development and real hours spent — so TREK stays Open Source.",
   'settings.about.supporters.since': 'supporter since {date}',
   'settings.about.supporters.tierEmpty': 'Be the first',
@@ -484,7 +484,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Login
   'login.error': 'Login failed. Please check your credentials.',
-  'login.tagline': 'Dont just a getaway.\nTanqaways.',
+  'login.tagline': 'Not just a getaway.\nA Tanqaway.',
   'login.description': 'Plan trips collaboratively with interactive maps, budgets, and real-time sync.',
   'login.features.maps': 'Interactive Maps',
   'login.features.mapsDesc': 'Google Places, routes & clustering',
@@ -2111,6 +2111,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // Journey Entry Editor
   'journey.editor.discardChangesConfirm': 'You have unsaved changes. Discard them?',
+  'journey.editor.uploadFailed': 'Photo upload failed',
   'journey.editor.uploadPhotos': 'Upload photos',
   'journey.editor.uploading': 'Uploading...',
   'journey.editor.fromGallery': 'From Gallery',
@@ -2219,6 +2220,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
   'journey.settings.failedToDelete': 'Failed to delete',
   'journey.entries.deleteTitle': 'Delete Entry',
   'journey.photosUploaded': '{count} photos uploaded',
+  'journey.photosUploadFailed': 'Some photos failed to upload',
   'journey.photosAdded': '{count} photos added',
 
   // Journey — Public Page
@@ -2366,7 +2368,7 @@ const en: Record<string, string | { name: string; category: string }[]> = {
 
   // System notices — 3.0.0 upgrade
   'system_notice.v3_photos.title': 'Photos have moved in 3.0',
-  'system_notice.v3_photos.body': '**Photos** in the Trip Planner have been removed. Your photos are safe — TREK never modified your Immich or Synology library.\n\nPhotos now live in the **Journey** addon. Journey is optional — if it is not yet available, ask your admin to enable it under Admin → Addons.',
+  'system_notice.v3_photos.body': '**Photos** in the Trip Planner have been removed. Your photos are safe — Tanqaways never modified your Immich or Synology library.\n\nPhotos now live in the **Journey** addon. Journey is optional — if it is not yet available, ask your admin to enable it under Admin → Addons.',
   'system_notice.v3_journey.title': 'Meet Journey — travel journal',
   'system_notice.v3_journey.body': 'Document your trips as rich travel stories with timelines, photo galleries, and interactive maps.',
   'system_notice.v3_journey.cta_label': 'Open Journey',

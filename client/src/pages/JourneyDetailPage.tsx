@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { formatLocationName } from '../utils/formatters'
+import { normalizeImageFiles } from '../utils/convertHeic'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useJourneyStore } from '../store/journeyStore'
@@ -29,6 +30,7 @@ import MobileEntryView from '../components/Journey/MobileEntryView'
 import { useIsMobile } from '../hooks/useIsMobile'
 import type { JourneyEntry, JourneyPhoto, GalleryPhoto, JourneyTrip, JourneyDetail } from '../store/journeyStore'
 import { computeJourneyLifecycle } from '../utils/journeyLifecycle'
+import { getApiErrorMessage } from '../types'
 
 const GRADIENTS = [
   'linear-gradient(135deg, #0F172A 0%, #6366F1 45%, #EC4899 100%)',
@@ -1027,13 +1029,14 @@ function GalleryView({ entries, gallery, journeyId, userId, trips, onPhotoClick,
     if (!files?.length) return
     setGalleryUploading(true)
     try {
+      const normalized = await normalizeImageFiles(files)
       const formData = new FormData()
-      for (const f of files) formData.append('photos', f)
+      for (const f of normalized) formData.append('photos', f)
       await journeyApi.uploadGalleryPhotos(journeyId, formData)
       toast.success(t('journey.photosUploaded', { count: files.length }))
       onRefresh()
-    } catch {
-      toast.error(t('journey.settings.coverFailed'))
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, t('journey.photosUploadFailed')))
     } finally {
       setGalleryUploading(false)
     }
@@ -2173,6 +2176,7 @@ function EntryEditor({ entry, journeyId, tripDates, galleryPhotos, onClose, onSa
   onDone: () => void
 }) {
   const { t } = useTranslation()
+  const toast = useToast()
   const isMobile = useIsMobile()
   const [title, setTitle] = useState(entry.title || '')
   const [story, setStory] = useState(entry.story || '')
@@ -2246,7 +2250,11 @@ function EntryEditor({ entry, journeyId, tripDates, galleryPhotos, onClose, onSa
       if (pendingFiles.length > 0 && entryId) {
         const formData = new FormData()
         for (const f of pendingFiles) formData.append('photos', f)
-        await onUploadPhotos(entryId, formData)
+        try {
+          await onUploadPhotos(entryId, formData)
+        } catch (err) {
+          toast.error(getApiErrorMessage(err, t('journey.editor.uploadFailed')))
+        }
       }
       // link gallery photos that were picked before save
       if (pendingLinkIds.length > 0 && entryId) {
@@ -2265,7 +2273,8 @@ function EntryEditor({ entry, journeyId, tripDates, galleryPhotos, onClose, onSa
     if (!files?.length) return
     // Queue files locally until Save so cancel/close actually discards. This
     // keeps photo behavior consistent with text fields — no silent persistence.
-    setPendingFiles(prev => [...prev, ...Array.from(files)])
+    const normalized = await normalizeImageFiles(files)
+    setPendingFiles(prev => [...prev, ...normalized])
   }
 
   return (
